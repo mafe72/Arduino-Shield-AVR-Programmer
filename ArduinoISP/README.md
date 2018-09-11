@@ -5,9 +5,9 @@ This sketch turns the Arduino into a AVRISP and takes advantage of the Piezo Spe
 
 If you want to program anything other than the standard bootloaders, you will need to add the appropriate "cores" to the Arduino software:
 
-*For a "Breadboard Arduino", which is an Atmega328 running on its internal crystal at 8 MHz, you must install the files from "Breadboard.zip" at http://arduino.cc/en/Tutorial/ArduinoToBreadboard into the "hardware" folder in your Arduino "sketchbook" folder.
+-For a "Breadboard Arduino", which is an Atmega328 running on its internal crystal at 8 MHz, you must install the files from "Breadboard.zip" at http://arduino.cc/en/Tutorial/ArduinoToBreadboard into the "hardware" folder in your Arduino "sketchbook" folder.
 
-*For Attiny chips, there are several cores available:
+-For Attiny chips, there are several cores available:
 1. I like [Arduino-Tiny](https://code.google.com/archive/p/arduino-tiny/) core based on work by David A. Mellis, René Bohne, R. Wiersma, Alessandro Saporetti, and Brian Cook because it supports the tone() command if you want to play sounds on a piezo speaker.
 2. If you want to program the Attiny2313, you can use the [Attiny](https://github.com/damellis/attiny/) core.
 
