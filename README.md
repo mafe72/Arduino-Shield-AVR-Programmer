@@ -19,6 +19,7 @@ Features:
 - Reprogram a chip in an existing circuit with an ISP header.
 - Simple and easy jumper system allows programming 8, 14, 20, and 28 pin chips using a single socket.
 - LEDs give the status of the programmer.
+- Support for a piezo beeper for error/success audible tones.
 - An indicator light on pin D3 lets you run “BLINK” on any of the chips while it is in the socket.
 - Compatible with ArduinoISP, AdafruitISP, and AdaLoader.
 - Tested on Duemilanove, Uno, and Mega (requires jumpers).
