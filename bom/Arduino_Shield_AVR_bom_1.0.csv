@@ -1,0 +1,34 @@
+Component,Description,References,Value,Quantity Per PCB,MPN,Datasheet
+1,"Buzzers Indicator, Internally Driven Magnetic 5V 40mA 2.3kHz 85dB @ 5V, 10cm Through Hole PC Pins",BZ1,Buzzer,1,WST-1205S,http://cirlw3yrzg4afc1x47lv2k18.wpengine.netdna-cdn.com/wp-content/uploads/2016/12/WST-1205S-new.pdf
+2,"10µF 16V Aluminum Electrolytic Capacitors Radial, Can - SMD  2000 Hrs @ 85°C",C3,10uf,1,EEE-1CA100SR,https://industrial.panasonic.com/cdbs/www-data/pdf/RDE0000/ABA0000C1145.pdf
+3,"22pF ±5% 100V Ceramic Capacitor C0G, NP0 1206 (3216 Metric)",C1 C2,22pf,2,AC1206JRNPO0BN220,http://www.yageo.com/documents/recent/UPY-AC_NP0X7R_16V-to-630V_11.pdf
+4,Red 638nm LED Indication - Discrete 1.8V 1206 (3216 Metric),D3,LED_ERR,1,LTST-C150CKT,http://optoelectronics.liteon.com/upload/download/DS-22-98-0002/LTST-C150CKT.pdf
+5,Green 569nm LED Indication - Discrete 2.1V 1206 (3216 Metric),D4,LED_HTE,1,LTST-C150GKT,http://optoelectronics.liteon.com/upload/download/DS-22-98-0004/LTST-C150GKT.pdf
+6,Yellow 591nm LED Indication - Discrete 2.1V 1206 (3216 Metric),D2,LED_PROG,1,LTST-C150KSKT,http://optoelectronics.liteon.com/upload/download/DS-22-99-0187/LTST-C150KSKT.pdf
+7,Blue 470nm LED Indication - Discrete 3.3V 1206 (3216 Metric),D1,LED_SCK,1,LTST-C150TBKT,http://optoelectronics.liteon.com/upload/download/DS22-2000-026/LTST-C150TBKT(0630).pdf
+8,CONN IC DIP SOCKET ZIF 24POS GLD,J5,28-PIN ZIF SOCKET,1,224-5248-00-0602J,http://aitendo3.sakura.ne.jp/aitendo_data/product_img/parts/socket/LCC/3M-TEXTOOL-LCCC.PDF
+9,"Connector Header Through Hole 6 position 0.100"" (2.54mm)",J4,ISP_329,1,M20-9720345,https://cdn.harwin.com/pdfs/M20-972.pdf
+10,"Connector Header Through Hole 6 position 0.100"" (2.54mm)",J3,ISP_84,1,M20-9720345,https://cdn.harwin.com/pdfs/M20-972.pdf
+11,"Connector Header Through Hole 6 position 0.100"" (2.54mm)",J2,ISP_85,1,M20-9720345,https://cdn.harwin.com/pdfs/M20-972.pdf
+12,"Connector Header Through Hole 6 position 0.100"" (2.54mm)",J1,ISP_MASTER,1,M20-9720345,https://cdn.harwin.com/pdfs/M20-972.pdf
+13,"Connector Header Through Hole 4 position 0.100"" (2.54mm)",J6,MEGA_JUMPERS,1,61300421121,https://katalog.we-online.de/em/datasheet/6130xx21121.pdf
+14,"Connector Header Through Hole 6 position 0.100"" (2.54mm)",P2,Analog,1,61300611121,https://katalog.we-online.de/em/datasheet/6130xx11121.pdf
+15,"Connector Header Through Hole 10 position 0.100"" (2.54mm)",P3,Digital,1,61301011121,https://katalog.we-online.de/em/datasheet/6130xx11121.pdf
+16,"Connector Header Through Hole 8 position 0.100"" (2.54mm)",P4,Digital,1,61300811121,https://katalog.we-online.de/em/datasheet/6130xx11121.pdf
+17,"Connector Header Through Hole 8 position 0.100"" (2.54mm)",P1,Power,1,61300811121,https://katalog.we-online.de/em/datasheet/6130xx11121.pdf
+18,"330 Ohms ±1% 0.25W, 1/4W Chip Resistor 1206 (3216 Metric) Moisture Resistant Thick Film",R1 R2 R3 R4,330R,4,RC1206FR-07330RL,http://www.yageo.com/documents/recent/PYu-RC_Group_51_RoHS_L_9.pdf
+19,Tactile Switch SPST-NO Top Actuated Surface Mount,SW1,SW_Push,1,TL3301AF260QG,http://spec_sheets.e-switch.com/specs/P010513.pdf
+20,16MHz ±30ppm Crystal 18pF 30 Ohms HC-49/US,Y1,16MHz,1,9C-16.000MAAJ-T,http://www.txccorp.com/download/products/quartz_crystals/2015TXC_9C_32.pdf
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
