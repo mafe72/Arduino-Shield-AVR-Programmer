@@ -26,7 +26,7 @@ This shield will work with the mega, but needs a 2x2 female header added in the 
 Settings:
 ----------------
 
-1. The stock Arduino software comes with the "ArduinoISP" sketch in the "Examples" section. This sketch must be uploaded without the shield in place since the shield has a capacitor to over-ride the reset signal (or you could use a manual reset before upload, like in the old-old days).
+1. Upload the ArduinoISP.ino provided on this section. This sketch must be uploaded without the shield in place since the shield has a capacitor to over-ride the reset signal (or you could use a manual reset before upload, like in the old-old days). Alternatively you can use the stock Arduino software "ArduinoISP" sketch included in the "Examples" section. 
 2. With the sketch uploaded, install the shield. You should see the green heart LED begin it's pulsing.
 3. In the IDE, select "Tools" -> "Programmer" -> "Arduino as ISP".
 4. Select the target chip type using "Tools" -> "Boards".
