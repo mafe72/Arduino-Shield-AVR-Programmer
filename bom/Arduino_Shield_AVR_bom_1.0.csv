@@ -19,16 +19,3 @@ Component,Description,References,Value,Quantity Per PCB,MPN,Datasheet
 18,"330 Ohms ±1% 0.25W, 1/4W Chip Resistor 1206 (3216 Metric) Moisture Resistant Thick Film",R1 R2 R3 R4,330R,4,RC1206FR-07330RL,http://www.yageo.com/documents/recent/PYu-RC_Group_51_RoHS_L_9.pdf
 19,Tactile Switch SPST-NO Top Actuated Surface Mount,SW1,SW_Push,1,TL3301AF260QG,http://spec_sheets.e-switch.com/specs/P010513.pdf
 20,16MHz ±30ppm Crystal 18pF 30 Ohms HC-49/US,Y1,16MHz,1,9C-16.000MAAJ-T,http://www.txccorp.com/download/products/quartz_crystals/2015TXC_9C_32.pdf
-,,,,,,
-,,,,,,
-,,,,,,
-,,,,,,
-,,,,,,
-,,,,,,
-,,,,,,
-,,,,,,
-,,,,,,
-,,,,,,
-,,,,,,
-,,,,,,
-,,,,,,
