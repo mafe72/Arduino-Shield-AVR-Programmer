@@ -1,0 +1,1680 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive BOM for KiCAD</title>
+  <style type="text/css">
+:root {
+  --pcb-edge-color: black;
+}
+
+html, body {
+  margin: 0px;
+  height: 100%;
+  font-family: Verdana, sans-serif;
+}
+
+.dark {
+  --pcb-edge-color: #eee;
+  background-color: #252c30;
+  color: #eee;
+}
+
+button {
+  background-color: #eee;
+  border: 1px solid #888;
+  color: black;
+  height: 44px;
+  width: 44px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  font-weight: bolder;
+}
+
+.dark button {
+  background-color: #c3b7b5; /* This will be inverted */
+}
+
+button.depressed {
+  background-color: #0a0;
+  color: white;
+}
+
+.dark button.depressed {
+  background-color: #b3b; /* This will be inverted */
+}
+
+button:focus {
+  outline: 0;
+}
+
+button#tb-btn {
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAABGdBTUEAALGPC/xhBQAAAwBQTFRFAAAABQUFCAgICQkJCgoKEBAQFhYWFxcXGxsbHBwcISEhIyMjJCQkKSkpLS0tLi4uMTExNzc3PDw8QEBAQkJCRERERkZGSEhIT09PWlpaW1tbXFxcYGBgaWlpd3d3eXl5enp6f39/gICAgYGBgoKCi4uLjIyMkpKSk5OTlJSUlpaWl5eXmZmZnJycn5+foqKipqamr6+vtLS0uLi4v7+/w8PDyMjIy8vLz8/P1dXV19fX3Nzc5ubm6urq7+/v8fHx9fX1+Pj4////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAdkhsDgAAAQB0Uk5T////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////AFP3ByUAAAAJcEhZcwAADsIAAA7CARUoSoAAAAAZdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjAuMTnU1rJkAAAA/klEQVQ4T9WT21bCMBBFB0UQRAWrVEmtDYgtXlC03m8l//9PwyQZSRfSLF/dLzmr2WtyHjqAKIJKBCJgI80rSRsIIlUeUgFBTud0LS9K5YEVorXMnFDJnwWeuULpCW61QqlkJf+mQ8wDLdmYgyUmIeRKloMOB0v464lpxMHCHYozy5yF1yRJ5O23Ez5hb6ApWJhBf3BUb32UhKGep2GBPt7DtV94hgePcPN01T6ltBQ2tohHJ+zub3ZpgBMi/ZN/OSFXxTlc+DuoXssvzDs7HuHw5Hi7drcUCqlHGozwJqUcXb5TIkFMzMUPRnBMBGAzM3vKxCEHQ9ak7fauP+ICTGDKoEYZFYYAAAAASUVORK5CYII=');
+  background-position: 5px 5px;
+  background-repeat: no-repeat;
+}
+
+button#lr-btn {
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAMAUExURQAAABYWFhcXFzIyMjc3Nzw8PD09PUBAQE9PT1ZWVldXV1paWlxcXGFhYWNjY2dnZ2xsbG5ubnFxcXNzc3V1dXZ2dnl5eYCAgIaGhpKSkpOTk5SUlJycnKKioqampqysrLGxsbe3t7+/v8XFxcnJydTU1NbW1tnZ2ebm5u/v7/z8/P///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJTAHzkAAAEAdFJOU////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////wBT9wclAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAGXRFWHRTb2Z0d2FyZQBwYWludC5uZXQgNC4wLjE51NayZAAAAO5JREFUOE+tk9kSgjAMRatRcakbrogL4q7//30xobFUpOiD56XJ9ExzpzNRiDrwohEV1qLUAeQ0RDVUOno4JJBIZYi0ClKpM4pCGpQKYY/h3giJRYRB90jkAlheQsiXjGfEd6FJEbbcV2W45YIEIP6XoSBIAMIjSABChJySEaE8ZigRCnxmKHtBZOKXDCyEw9k8vnDvEeirz2vYU2UEmUe8BP6HxcgKEoBwhf7GCg4itMZzmHDvz3A6wI6qqgwpWEECEK5whrt/BAnXaYcqnwDQaC/pARZ0nN0IRsiJtcL6SjY14315V3Xa7sr1R3wC/SGCp4FJdscAAAAASUVORK5CYII=');
+  background-position: 5px 5px;
+  background-repeat: no-repeat;
+}
+
+button#bom-btn {
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAABGdBTUEAALGPC/xhBQAAAwBQTFRFAAAAFhYWFxcXQEBAXFxcYGBgkpKSk5OTlJSUn5+fr6+vv7+/z8/P////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQtWgtgAAAQB0Uk5T////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////AFP3ByUAAAAJcEhZcwAADsIAAA7CARUoSoAAAAAZdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjAuMTnU1rJkAAAAaElEQVQ4T+3T0QqAIAwF0JlrWub/f+5NcpCIk16Fzosv4+6CjAD2JgYITpJJHIglTwiTT+U9hq6ck68D+9D5Dpg+D2hmp1mhrTpNSdNSHTSz8/9FtVAHjk+WITJhC3qpA2Er1z09f+AGC2MyfYdXtvQAAAAASUVORK5CYII=');
+  background-position: 5px 5px;
+  background-repeat: no-repeat;
+}
+
+.left-most-button {
+  border-right: 0;
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+}
+
+.middle-button {
+  border-right: 0;
+}
+
+.right-most-button {
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+.button-container {
+  font-size: 0;
+}
+
+.dark .button-container {
+  filter: invert(1);
+}
+
+@media print {
+  .hideonprint {
+    display: none;
+  }
+}
+
+canvas {
+  cursor: crosshair;
+}
+
+canvas:active {
+  cursor: grabbing;
+}
+
+.fileinfo {
+  width: 100%;
+  max-width: 1000px;
+  border: none;
+  padding: 5px;
+}
+
+.fileinfo .title {
+  font-size: 20pt;
+  font-weight: bold;
+}
+
+.fileinfo td {
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: 1px;
+  width: 50%;
+  text-overflow: ellipsis;
+}
+
+.bom {
+  border-collapse: collapse;
+  font-family: Consolas, "DejaVu Sans Mono", Monaco, monospace;
+  font-size: 10pt;
+  table-layout: fixed;
+  width: 100%;
+  margin-top: 1px;
+}
+
+.bom th, .bom td {
+  border: 1px solid black;
+  padding: 5px;
+  word-wrap: break-word;
+  text-align: center;
+}
+
+.dark .bom th, .dark .bom td {
+  border: 1px solid #777;
+}
+
+.bom th {
+  background-color: #CCCCCC;
+}
+
+.dark .bom th {
+  background-color: #3b4749;
+}
+
+.bom tr.highlighted:nth-child(n) {
+  background-color: #cfc;
+}
+
+.dark .bom tr.highlighted:nth-child(n) {
+  background-color: #226022;
+}
+
+.bom tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.dark .bom tr:nth-child(even) {
+  background-color: #313b40;
+}
+
+.bom tr {
+  transition: background-color 0.2s;
+}
+
+.bom .numCol {
+  width: 25px;
+}
+
+.bom .bom-checkbox {
+  width: 30px;
+}
+
+.bom .Description {
+  width: 10%;
+}
+
+.bom .Part {
+  width: 10%;
+}
+
+.bom .Value {
+  width: 15%;
+}
+
+.bom .Quantity {
+  width: 65px;
+}
+
+.split {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.split.split-horizontal, .gutter.gutter-horizontal {
+  height: 100%;
+  float: left;
+}
+
+.gutter {
+  background-color: #ddd;
+  background-repeat: no-repeat;
+  background-position: 50%;
+  transition: background-color 0.3s;
+}
+
+.dark .gutter {
+  background-color: #777;
+}
+
+.gutter.gutter-horizontal {
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
+  cursor: ew-resize;
+  width: 5px;
+}
+
+.gutter.gutter-vertical {
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=');
+  cursor: ns-resize;
+  height: 5px;
+}
+
+.searchbox {
+  float: left;
+  height: 40px;
+  margin: 10px 5px;
+  padding: 12px 32px;
+  font-family: Consolas, "DejaVu Sans Mono", Monaco, monospace;
+  font-size: 18px;
+  box-sizing: border-box;
+  border: 1px solid #888;
+  border-radius: 6px;
+  outline: none;
+  background-color: #eee;
+  transition: background-color 0.2s, border 0.2s;
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABNklEQVQ4T8XSMUvDQBQH8P/LElFa/AIZHcTBQSz0I/gFstTBRR2KUC4ldDxw7h0Bl3RRUATxi4iiODgoiLNrbQYp5J6cpJJqomkX33Z37/14d/dIa33MzDuYI4johOI4XhyNRteO46zNYjDzAxE1yBZprVeZ+QbAUhXEGJMA2Ox2u4+fQIa0mPmsCgCgJYQ4t7lfgF0opQYAdv9ABkKI/UnOFCClXKjX61cA1osQY8x9kiRNKeV7IWA3oyhaSdP0FkAtjxhj3hzH2RBCPOf3pzqYHCilfAAX+URm9oMguPzeWSGQvUcMYC8rOBJCHBRdqxTo9/vbRHRqi8bj8XKv1xvODbiuW2u32/bvf0SlDv4XYOY7z/Mavu+nM1+BmQ+NMc0wDF/LprP0DbTWW0T00ul0nn4b7Q87+X4Qmfiq2wAAAABJRU5ErkJggg==');
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+}
+
+.dark .searchbox {
+  background-color: #111;
+  color: #eee;
+}
+
+.searchbox::placeholder {
+  color: #ccc;
+}
+
+.dark .searchbox::placeholder {
+  color: #666;
+}
+
+.filter {
+  width: calc(60% - 10px);
+}
+
+.reflookup {
+  width: calc(40% - 10px);
+}
+
+input[type=text]:focus {
+  background-color: white;
+  border: 1px solid #333;
+}
+
+.dark input[type=text]:focus {
+  background-color: #333;
+  border: 1px solid #ccc;
+}
+
+mark.highlight {
+  background-color: #5050ff;
+  color: #fff;
+  padding: 2px;
+  border-radius: 6px;
+}
+
+.dark mark.highlight {
+  background-color: #76a6da;
+  color: #111;
+}
+
+.menubtn {
+  background-color: white;
+  font-size: 16px;
+  border: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36' viewBox='0 0 20 20'%3E%3Cpath fill='none' d='M0 0h20v20H0V0z'/%3E%3Cpath d='M15.95 10.78c.03-.25.05-.51.05-.78s-.02-.53-.06-.78l1.69-1.32c.15-.12.19-.34.1-.51l-1.6-2.77c-.1-.18-.31-.24-.49-.18l-1.99.8c-.42-.32-.86-.58-1.35-.78L12 2.34c-.03-.2-.2-.34-.4-.34H8.4c-.2 0-.36.14-.39.34l-.3 2.12c-.49.2-.94.47-1.35.78l-1.99-.8c-.18-.07-.39 0-.49.18l-1.6 2.77c-.1.18-.06.39.1.51l1.69 1.32c-.04.25-.07.52-.07.78s.02.53.06.78L2.37 12.1c-.15.12-.19.34-.1.51l1.6 2.77c.1.18.31.24.49.18l1.99-.8c.42.32.86.58 1.35.78l.3 2.12c.04.2.2.34.4.34h3.2c.2 0 .37-.14.39-.34l.3-2.12c.49-.2.94-.47 1.35-.78l1.99.8c.18.07.39 0 .49-.18l1.6-2.77c.1-.18.06-.39-.1-.51l-1.67-1.32zM10 13c-1.65 0-3-1.35-3-3s1.35-3 3-3 3 1.35 3 3-1.35 3-3 3z'/%3E%3C/svg%3E%0A");
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.dark .menubtn {
+  filter: invert(1);
+}
+
+.menu {
+  position: relative;
+  display: inline-block;
+}
+
+.menu-content {
+  display: none;
+  position: absolute;
+  background-color: white;
+  right: 0;
+  min-width: 300px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 100;
+  padding: 8px;
+}
+
+.dark .menu-content {
+  background-color: #111;
+}
+
+.menu:hover .menu-content {
+  display: block;
+}
+
+.menu:hover .menubtn {
+  background-color: #eee;
+}
+
+.dark .menu:hover .menubtn {
+}
+
+.menu-label {
+  display: inline-block;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-top: 0;
+  width: calc(100% - 18px);
+}
+
+.menu-label-top {
+  border-top: 1px solid #ccc;
+}
+
+.menu-textbox {
+  float: left;
+  height: 24px;
+  margin: 10px 5px;
+  padding: 5px 5px;
+  font-family: Consolas, "DejaVu Sans Mono", Monaco, monospace;
+  font-size: 14px;
+  box-sizing: border-box;
+  border: 1px solid #888;
+  border-radius: 4px;
+  outline: none;
+  background-color: #eee;
+  transition: background-color 0.2s, border 0.2s;
+  width: calc(100% - 10px);
+}
+
+.dark .menu-textbox {
+  background-color: #222;
+  color: #eee;
+}
+
+#topmostdiv {
+  transition: background-color 0.3s;
+}
+
+#top {
+  height: 78px;
+  border-bottom: 2px solid black;
+}
+
+.dark #top {
+  border-bottom: 2px solid #ccc;
+}
+
+#dbg {
+  display: block;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #aaa;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #666;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+  </style>
+  <script type="text/javascript" >
+///////////////////////////////////////////////
+/*
+  Split.js - v1.3.5
+  MIT License
+  https://github.com/nathancahill/Split.js
+*/
+!function(e,t){"object"==typeof exports&&"undefined"!=typeof module?module.exports=t():"function"==typeof define&&define.amd?define(t):e.Split=t()}(this,function(){"use strict";var e=window,t=e.document,n="addEventListener",i="removeEventListener",r="getBoundingClientRect",s=function(){return!1},o=e.attachEvent&&!e[n],a=["","-webkit-","-moz-","-o-"].filter(function(e){var n=t.createElement("div");return n.style.cssText="width:"+e+"calc(9px)",!!n.style.length}).shift()+"calc",l=function(e){return"string"==typeof e||e instanceof String?t.querySelector(e):e};return function(u,c){function z(e,t,n){var i=A(y,t,n);Object.keys(i).forEach(function(t){return e.style[t]=i[t]})}function h(e,t){var n=B(y,t);Object.keys(n).forEach(function(t){return e.style[t]=n[t]})}function f(e){var t=E[this.a],n=E[this.b],i=t.size+n.size;t.size=e/this.size*i,n.size=i-e/this.size*i,z(t.element,t.size,this.aGutterSize),z(n.element,n.size,this.bGutterSize)}function m(e){var t;this.dragging&&((t="touches"in e?e.touches[0][b]-this.start:e[b]-this.start)<=E[this.a].minSize+M+this.aGutterSize?t=E[this.a].minSize+this.aGutterSize:t>=this.size-(E[this.b].minSize+M+this.bGutterSize)&&(t=this.size-(E[this.b].minSize+this.bGutterSize)),f.call(this,t),c.onDrag&&c.onDrag())}function g(){var e=E[this.a].element,t=E[this.b].element;this.size=e[r]()[y]+t[r]()[y]+this.aGutterSize+this.bGutterSize,this.start=e[r]()[G]}function d(){var t=this,n=E[t.a].element,r=E[t.b].element;t.dragging&&c.onDragEnd&&c.onDragEnd(),t.dragging=!1,e[i]("mouseup",t.stop),e[i]("touchend",t.stop),e[i]("touchcancel",t.stop),t.parent[i]("mousemove",t.move),t.parent[i]("touchmove",t.move),delete t.stop,delete t.move,n[i]("selectstart",s),n[i]("dragstart",s),r[i]("selectstart",s),r[i]("dragstart",s),n.style.userSelect="",n.style.webkitUserSelect="",n.style.MozUserSelect="",n.style.pointerEvents="",r.style.userSelect="",r.style.webkitUserSelect="",r.style.MozUserSelect="",r.style.pointerEvents="",t.gutter.style.cursor="",t.parent.style.cursor=""}function S(t){var i=this,r=E[i.a].element,o=E[i.b].element;!i.dragging&&c.onDragStart&&c.onDragStart(),t.preventDefault(),i.dragging=!0,i.move=m.bind(i),i.stop=d.bind(i),e[n]("mouseup",i.stop),e[n]("touchend",i.stop),e[n]("touchcancel",i.stop),i.parent[n]("mousemove",i.move),i.parent[n]("touchmove",i.move),r[n]("selectstart",s),r[n]("dragstart",s),o[n]("selectstart",s),o[n]("dragstart",s),r.style.userSelect="none",r.style.webkitUserSelect="none",r.style.MozUserSelect="none",r.style.pointerEvents="none",o.style.userSelect="none",o.style.webkitUserSelect="none",o.style.MozUserSelect="none",o.style.pointerEvents="none",i.gutter.style.cursor=j,i.parent.style.cursor=j,g.call(i)}function v(e){e.forEach(function(t,n){if(n>0){var i=F[n-1],r=E[i.a],s=E[i.b];r.size=e[n-1],s.size=t,z(r.element,r.size,i.aGutterSize),z(s.element,s.size,i.bGutterSize)}})}function p(){F.forEach(function(e){e.parent.removeChild(e.gutter),E[e.a].element.style[y]="",E[e.b].element.style[y]=""})}void 0===c&&(c={});var y,b,G,E,w=l(u[0]).parentNode,D=e.getComputedStyle(w).flexDirection,U=c.sizes||u.map(function(){return 100/u.length}),k=void 0!==c.minSize?c.minSize:100,x=Array.isArray(k)?k:u.map(function(){return k}),L=void 0!==c.gutterSize?c.gutterSize:10,M=void 0!==c.snapOffset?c.snapOffset:30,O=c.direction||"horizontal",j=c.cursor||("horizontal"===O?"ew-resize":"ns-resize"),C=c.gutter||function(e,n){var i=t.createElement("div");return i.className="gutter gutter-"+n,i},A=c.elementStyle||function(e,t,n){var i={};return"string"==typeof t||t instanceof String?i[e]=t:i[e]=o?t+"%":a+"("+t+"% - "+n+"px)",i},B=c.gutterStyle||function(e,t){return n={},n[e]=t+"px",n;var n};"horizontal"===O?(y="width","clientWidth",b="clientX",G="left","paddingLeft"):"vertical"===O&&(y="height","clientHeight",b="clientY",G="top","paddingTop");var F=[];return E=u.map(function(e,t){var i,s={element:l(e),size:U[t],minSize:x[t]};if(t>0&&(i={a:t-1,b:t,dragging:!1,isFirst:1===t,isLast:t===u.length-1,direction:O,parent:w},i.aGutterSize=L,i.bGutterSize=L,i.isFirst&&(i.aGutterSize=L/2),i.isLast&&(i.bGutterSize=L/2),"row-reverse"===D||"column-reverse"===D)){var a=i.a;i.a=i.b,i.b=a}if(!o&&t>0){var c=C(t,O);h(c,L),c[n]("mousedown",S.bind(i)),c[n]("touchstart",S.bind(i)),w.insertBefore(c,s.element),i.gutter=c}0===t||t===u.length-1?z(s.element,s.size,L/2):z(s.element,s.size,L);var f=s.element[r]()[y];return f<s.minSize&&(s.minSize=f),t>0&&F.push(i),s}),o?{setSizes:v,destroy:p}:{setSizes:v,getSizes:function(){return E.map(function(e){return e.size})},collapse:function(e){if(e===F.length){var t=F[e-1];g.call(t),o||f.call(t,t.size-t.bGutterSize)}else{var n=F[e];g.call(n),o||f.call(n,n.aGutterSize)}},destroy:p}}});
+
+///////////////////////////////////////////////
+
+///////////////////////////////////////////////
+var pcbdata = {"modules": {"P2": {"layer": "B", "center": [161.798, 123.82499999999999], "pads": [{"layers": ["F", "B"], "angle": -270.0, "pos": [174.498, 123.82499999999999], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -270.0, "pos": [171.958, 123.82499999999999], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -270.0, "pos": [169.418, 123.82499999999999], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -270.0, "pos": [166.878, 123.82499999999999], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -270.0, "pos": [164.338, 123.82499999999999], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -270.0, "pos": [161.798, 123.82499999999999], "drillsize": [1.0, 1.0], "shape": "rect", "drillshape": "circle", "pin1": true, "type": "th", "size": [1.7, 1.7]}], "drawings": [], "ref": "P2", "bbox": {"pos": [159.972999, 121.99999899999999], "size": [16.350002, 3.6500019999999997]}}, "G01": {"layer": "B", "center": [159.38245999999998, 116.84508], "pads": [], "drawings": [], "ref": "G01", "bbox": {"pos": [149.46260999999998, 112.183413], "size": [19.724809999999998, 9.215824999999999]}}, "R2": {"layer": "F", "center": [163.732, 109.74199999999999], "pads": [{"layers": ["F"], "angle": -270.0, "pos": [163.732, 111.142], "shape": "roundrect", "radius": 0.25, "pin1": false, "type": "smd", "size": [1.25, 1.75]}, {"layers": ["F"], "angle": -270.0, "pos": [163.732, 108.342], "shape": "roundrect", "radius": 0.25, "pin1": true, "type": "smd", "size": [1.25, 1.75]}], "drawings": [], "ref": "R2", "bbox": {"pos": [162.586999, 107.436999], "size": [2.290002, 4.610002]}}, "C3": {"layer": "F", "center": [164.358, 103.886], "pads": [{"layers": ["F"], "angle": -180.0, "pos": [166.158, 103.886], "shape": "rect", "pin1": true, "type": "smd", "size": [2.6, 1.5999999999999999]}, {"layers": ["F"], "angle": -180.0, "pos": [162.558, 103.886], "shape": "rect", "pin1": false, "type": "smd", "size": [2.6, 1.5999999999999999]}], "drawings": [], "ref": "C3", "bbox": {"pos": [160.982999, 101.460999], "size": [6.750001999999999, 4.850002]}}, "C2": {"layer": "F", "center": [177.691, 97.91189999999999], "pads": [{"layers": ["F"], "angle": -270.0, "pos": [177.691, 99.3119], "shape": "roundrect", "radius": 0.25, "pin1": false, "type": "smd", "size": [1.25, 1.75]}, {"layers": ["F"], "angle": -270.0, "pos": [177.691, 96.5119], "shape": "roundrect", "radius": 0.25, "pin1": true, "type": "smd", "size": [1.25, 1.75]}], "drawings": [], "ref": "C2", "bbox": {"pos": [176.545999, 95.606899], "size": [2.290002, 4.610002]}}, "C1": {"layer": "F", "center": [160.22299999999998, 97.91189999999999], "pads": [{"layers": ["F"], "angle": -270.0, "pos": [160.22299999999998, 96.5119], "shape": "roundrect", "radius": 0.25, "pin1": true, "type": "smd", "size": [1.25, 1.75]}, {"layers": ["F"], "angle": -270.0, "pos": [160.22299999999998, 99.3119], "shape": "roundrect", "radius": 0.25, "pin1": false, "type": "smd", "size": [1.25, 1.75]}], "drawings": [], "ref": "C1", "bbox": {"pos": [159.077999, 95.606899], "size": [2.290002, 4.610002]}}, "R4": {"layer": "F", "center": [148.918, 109.74199999999999], "pads": [{"layers": ["F"], "angle": -270.0, "pos": [148.918, 108.342], "shape": "roundrect", "radius": 0.25, "pin1": true, "type": "smd", "size": [1.25, 1.75]}, {"layers": ["F"], "angle": -270.0, "pos": [148.918, 111.142], "shape": "roundrect", "radius": 0.25, "pin1": false, "type": "smd", "size": [1.25, 1.75]}], "drawings": [], "ref": "R4", "bbox": {"pos": [147.772999, 107.436999], "size": [2.290002, 4.610002]}}, "P3": {"layer": "B", "center": [129.79399999999998, 75.565], "pads": [{"layers": ["F", "B"], "angle": -270.0, "pos": [152.654, 75.565], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -270.0, "pos": [150.114, 75.565], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -270.0, "pos": [147.57399999999998, 75.565], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -270.0, "pos": [145.034, 75.565], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -270.0, "pos": [142.494, 75.565], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -270.0, "pos": [139.954, 75.565], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -270.0, "pos": [137.414, 75.565], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -270.0, "pos": [134.874, 75.565], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -270.0, "pos": [132.334, 75.565], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -270.0, "pos": [129.79399999999998, 75.565], "drillsize": [1.0, 1.0], "shape": "rect", "drillshape": "circle", "pin1": true, "type": "th", "size": [1.7, 1.7]}], "drawings": [], "ref": "P3", "bbox": {"pos": [127.968999, 73.739999], "size": [26.500002, 3.6500019999999997]}}, "P1": {"layer": "B", "center": [138.938, 123.82499999999999], "pads": [{"layers": ["F", "B"], "angle": -270.0, "pos": [156.718, 123.82499999999999], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -270.0, "pos": [154.178, 123.82499999999999], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -270.0, "pos": [151.638, 123.82499999999999], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -270.0, "pos": [149.09799999999998, 123.82499999999999], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -270.0, "pos": [146.558, 123.82499999999999], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -270.0, "pos": [144.018, 123.82499999999999], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -270.0, "pos": [141.47799999999998, 123.82499999999999], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -270.0, "pos": [138.938, 123.82499999999999], "drillsize": [1.0, 1.0], "shape": "rect", "drillshape": "circle", "pin1": true, "type": "th", "size": [1.7, 1.7]}], "drawings": [], "ref": "P1", "bbox": {"pos": [137.112999, 121.99999899999999], "size": [21.400002, 3.6500019999999997]}}, "R1": {"layer": "F", "center": [160.287, 109.74199999999999], "pads": [{"layers": ["F"], "angle": -270.0, "pos": [160.287, 108.342], "shape": "roundrect", "radius": 0.25, "pin1": true, "type": "smd", "size": [1.25, 1.75]}, {"layers": ["F"], "angle": -270.0, "pos": [160.287, 111.142], "shape": "roundrect", "radius": 0.25, "pin1": false, "type": "smd", "size": [1.25, 1.75]}], "drawings": [], "ref": "R1", "bbox": {"pos": [159.141999, 107.436999], "size": [2.290002, 4.610002]}}, "P4": {"layer": "B", "center": [156.718, 75.565], "pads": [{"layers": ["F", "B"], "angle": -270.0, "pos": [174.498, 75.565], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -270.0, "pos": [171.958, 75.565], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -270.0, "pos": [169.418, 75.565], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -270.0, "pos": [166.878, 75.565], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -270.0, "pos": [164.338, 75.565], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -270.0, "pos": [161.798, 75.565], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -270.0, "pos": [159.25799999999998, 75.565], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -270.0, "pos": [156.718, 75.565], "drillsize": [1.0, 1.0], "shape": "rect", "drillshape": "circle", "pin1": true, "type": "th", "size": [1.7, 1.7]}], "drawings": [], "ref": "P4", "bbox": {"pos": [154.892999, 73.739999], "size": [21.400002, 3.6500019999999997]}}, "R3": {"layer": "F", "center": [167.178, 109.74199999999999], "pads": [{"layers": ["F"], "angle": -270.0, "pos": [167.178, 108.342], "shape": "roundrect", "radius": 0.25, "pin1": true, "type": "smd", "size": [1.25, 1.75]}, {"layers": ["F"], "angle": -270.0, "pos": [167.178, 111.142], "shape": "roundrect", "radius": 0.25, "pin1": false, "type": "smd", "size": [1.25, 1.75]}], "drawings": [], "ref": "R3", "bbox": {"pos": [166.032999, 107.436999], "size": [2.290002, 4.610002]}}, "Y1": {"layer": "F", "center": [168.957, 97.91189999999999], "pads": [{"layers": ["F"], "angle": -0.0, "pos": [164.707, 97.91189999999999], "shape": "rect", "pin1": true, "type": "smd", "size": [4.5, 2.0]}, {"layers": ["F"], "angle": -0.0, "pos": [173.207, 97.91189999999999], "shape": "rect", "pin1": false, "type": "smd", "size": [4.5, 2.0]}], "drawings": [], "ref": "Y1", "bbox": {"pos": [162.13199899999998, 95.28689899999999], "size": [13.650001999999999, 5.250001999999999]}}, "BZ1": {"layer": "B", "center": [136.375, 97.8586], "pads": [{"layers": ["F", "B"], "angle": -0.0, "pos": [136.375, 97.8586], "drillsize": [1.0, 1.0], "shape": "rect", "drillshape": "circle", "pin1": true, "type": "th", "size": [2.0, 2.0]}, {"layers": ["F", "B"], "angle": -0.0, "pos": [143.975, 97.8586], "drillsize": [1.0, 1.0], "shape": "circle", "drillshape": "circle", "pin1": false, "type": "th", "size": [2.0, 2.0]}], "drawings": [], "ref": "BZ1", "bbox": {"pos": [133.89999899999998, 91.58359899999999], "size": [12.550002, 12.550002]}}, "J4": {"layer": "F", "center": [153.642, 105.172], "pads": [{"layers": ["F", "B"], "angle": -0.0, "pos": [156.182, 110.252], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -0.0, "pos": [153.642, 110.252], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -0.0, "pos": [156.182, 107.71199999999999], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -0.0, "pos": [153.642, 107.71199999999999], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -0.0, "pos": [156.182, 105.172], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -0.0, "pos": [153.642, 105.172], "drillsize": [1.0, 1.0], "shape": "rect", "drillshape": "circle", "pin1": true, "type": "th", "size": [1.7, 1.7]}], "drawings": [], "ref": "J4", "bbox": {"pos": [151.81699899999998, 103.346999], "size": [6.200002, 8.700002]}}, "J5": {"layer": "F", "center": [136.51999999999998, 90.612], "pads": [{"layers": ["F", "B"], "angle": -90.0, "pos": [136.51999999999998, 90.612], "drillsize": [0.7999999999999999, 0.7999999999999999], "shape": "rect", "drillshape": "circle", "pin1": true, "type": "th", "size": [1.5999999999999999, 1.5999999999999999]}, {"layers": ["F", "B"], "angle": -90.0, "pos": [169.54, 82.99199999999999], "drillsize": [0.7999999999999999, 0.7999999999999999], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.5999999999999999, 1.5999999999999999]}, {"layers": ["F", "B"], "angle": -90.0, "pos": [139.06, 90.612], "drillsize": [0.7999999999999999, 0.7999999999999999], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.5999999999999999, 1.5999999999999999]}, {"layers": ["F", "B"], "angle": -90.0, "pos": [167.0, 82.99199999999999], "drillsize": [0.7999999999999999, 0.7999999999999999], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.5999999999999999, 1.5999999999999999]}, {"layers": ["F", "B"], "angle": -90.0, "pos": [141.6, 90.612], "drillsize": [0.7999999999999999, 0.7999999999999999], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.5999999999999999, 1.5999999999999999]}, {"layers": ["F", "B"], "angle": -90.0, "pos": [164.45999999999998, 82.99199999999999], "drillsize": [0.7999999999999999, 0.7999999999999999], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.5999999999999999, 1.5999999999999999]}, {"layers": ["F", "B"], "angle": -90.0, "pos": [144.14, 90.612], "drillsize": [0.7999999999999999, 0.7999999999999999], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.5999999999999999, 1.5999999999999999]}, {"layers": ["F", "B"], "angle": -90.0, "pos": [161.92, 82.99199999999999], "drillsize": [0.7999999999999999, 0.7999999999999999], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.5999999999999999, 1.5999999999999999]}, {"layers": ["F", "B"], "angle": -90.0, "pos": [146.68, 90.612], "drillsize": [0.7999999999999999, 0.7999999999999999], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.5999999999999999, 1.5999999999999999]}, {"layers": ["F", "B"], "angle": -90.0, "pos": [159.38, 82.99199999999999], "drillsize": [0.7999999999999999, 0.7999999999999999], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.5999999999999999, 1.5999999999999999]}, {"layers": ["F", "B"], "angle": -90.0, "pos": [149.22, 90.612], "drillsize": [0.7999999999999999, 0.7999999999999999], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.5999999999999999, 1.5999999999999999]}, {"layers": ["F", "B"], "angle": -90.0, "pos": [156.84, 82.99199999999999], "drillsize": [0.7999999999999999, 0.7999999999999999], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.5999999999999999, 1.5999999999999999]}, {"layers": ["F", "B"], "angle": -90.0, "pos": [151.76, 90.612], "drillsize": [0.7999999999999999, 0.7999999999999999], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.5999999999999999, 1.5999999999999999]}, {"layers": ["F", "B"], "angle": -90.0, "pos": [154.29999999999998, 82.99199999999999], "drillsize": [0.7999999999999999, 0.7999999999999999], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.5999999999999999, 1.5999999999999999]}, {"layers": ["F", "B"], "angle": -90.0, "pos": [154.29999999999998, 90.612], "drillsize": [0.7999999999999999, 0.7999999999999999], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.5999999999999999, 1.5999999999999999]}, {"layers": ["F", "B"], "angle": -90.0, "pos": [151.76, 82.99199999999999], "drillsize": [0.7999999999999999, 0.7999999999999999], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.5999999999999999, 1.5999999999999999]}, {"layers": ["F", "B"], "angle": -90.0, "pos": [156.84, 90.612], "drillsize": [0.7999999999999999, 0.7999999999999999], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.5999999999999999, 1.5999999999999999]}, {"layers": ["F", "B"], "angle": -90.0, "pos": [149.22, 82.99199999999999], "drillsize": [0.7999999999999999, 0.7999999999999999], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.5999999999999999, 1.5999999999999999]}, {"layers": ["F", "B"], "angle": -90.0, "pos": [159.38, 90.612], "drillsize": [0.7999999999999999, 0.7999999999999999], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.5999999999999999, 1.5999999999999999]}, {"layers": ["F", "B"], "angle": -90.0, "pos": [146.68, 82.99199999999999], "drillsize": [0.7999999999999999, 0.7999999999999999], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.5999999999999999, 1.5999999999999999]}, {"layers": ["F", "B"], "angle": -90.0, "pos": [161.92, 90.612], "drillsize": [0.7999999999999999, 0.7999999999999999], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.5999999999999999, 1.5999999999999999]}, {"layers": ["F", "B"], "angle": -90.0, "pos": [144.14, 82.99199999999999], "drillsize": [0.7999999999999999, 0.7999999999999999], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.5999999999999999, 1.5999999999999999]}, {"layers": ["F", "B"], "angle": -90.0, "pos": [164.45999999999998, 90.612], "drillsize": [0.7999999999999999, 0.7999999999999999], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.5999999999999999, 1.5999999999999999]}, {"layers": ["F", "B"], "angle": -90.0, "pos": [141.6, 82.99199999999999], "drillsize": [0.7999999999999999, 0.7999999999999999], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.5999999999999999, 1.5999999999999999]}, {"layers": ["F", "B"], "angle": -90.0, "pos": [167.0, 90.612], "drillsize": [0.7999999999999999, 0.7999999999999999], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.5999999999999999, 1.5999999999999999]}, {"layers": ["F", "B"], "angle": -90.0, "pos": [139.06, 82.99199999999999], "drillsize": [0.7999999999999999, 0.7999999999999999], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.5999999999999999, 1.5999999999999999]}, {"layers": ["F", "B"], "angle": -90.0, "pos": [169.54, 90.612], "drillsize": [0.7999999999999999, 0.7999999999999999], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.5999999999999999, 1.5999999999999999]}, {"layers": ["F", "B"], "angle": -90.0, "pos": [136.51999999999998, 82.99199999999999], "drillsize": [0.7999999999999999, 0.7999999999999999], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.5999999999999999, 1.5999999999999999]}], "drawings": [], "ref": "J5", "bbox": {"pos": [134.89499899999998, 81.436999], "size": [36.300002, 10.750002]}}, "J6": {"layer": "F", "center": [171.47799999999998, 116.68299999999999], "pads": [{"layers": ["F", "B"], "angle": -0.0, "pos": [171.47799999999998, 116.68299999999999], "drillsize": [1.0, 1.0], "shape": "rect", "drillshape": "circle", "pin1": true, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -0.0, "pos": [174.018, 116.68299999999999], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -0.0, "pos": [171.47799999999998, 119.223], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -0.0, "pos": [174.018, 119.223], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}], "drawings": [], "ref": "J6", "bbox": {"pos": [169.652999, 114.85799899999999], "size": [6.200002, 6.200002]}}, "J1": {"layer": "F", "center": [171.34799999999998, 105.172], "pads": [{"layers": ["F", "B"], "angle": -0.0, "pos": [171.34799999999998, 105.172], "drillsize": [1.0, 1.0], "shape": "rect", "drillshape": "circle", "pin1": true, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -0.0, "pos": [173.888, 105.172], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -0.0, "pos": [171.34799999999998, 107.71199999999999], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -0.0, "pos": [173.888, 107.71199999999999], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -0.0, "pos": [171.34799999999998, 110.252], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -0.0, "pos": [173.888, 110.252], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}], "drawings": [], "ref": "J1", "bbox": {"pos": [169.522999, 103.346999], "size": [6.200002, 8.700002]}}, "J2": {"layer": "F", "center": [129.644, 105.172], "pads": [{"layers": ["F", "B"], "angle": -0.0, "pos": [129.644, 105.172], "drillsize": [1.0, 1.0], "shape": "rect", "drillshape": "circle", "pin1": true, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -0.0, "pos": [132.184, 105.172], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -0.0, "pos": [129.644, 107.71199999999999], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -0.0, "pos": [132.184, 107.71199999999999], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -0.0, "pos": [129.644, 110.252], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -0.0, "pos": [132.184, 110.252], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}], "drawings": [], "ref": "J2", "bbox": {"pos": [127.81899899999999, 103.346999], "size": [6.200002, 8.700002]}}, "J3": {"layer": "F", "center": [141.643, 105.172], "pads": [{"layers": ["F", "B"], "angle": -0.0, "pos": [144.183, 110.252], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -0.0, "pos": [141.643, 110.252], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -0.0, "pos": [144.183, 107.71199999999999], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -0.0, "pos": [141.643, 107.71199999999999], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -0.0, "pos": [144.183, 105.172], "drillsize": [1.0, 1.0], "shape": "oval", "drillshape": "circle", "pin1": false, "type": "th", "size": [1.7, 1.7]}, {"layers": ["F", "B"], "angle": -0.0, "pos": [141.643, 105.172], "drillsize": [1.0, 1.0], "shape": "rect", "drillshape": "circle", "pin1": true, "type": "th", "size": [1.7, 1.7]}], "drawings": [], "ref": "J3", "bbox": {"pos": [139.817999, 103.346999], "size": [6.200002, 8.700002]}}, "REF01": {"layer": "B", "center": [164.28974, 97.8789], "pads": [], "drawings": [], "ref": "REF01", "bbox": {"pos": [159.888585, 94.161591], "size": [8.80231, 7.452731999999999]}}, "SW1": {"layer": "F", "center": [136.947, 118.31599999999999], "pads": [{"layers": ["F"], "angle": -180.0, "pos": [140.922, 120.56599999999999], "shape": "rect", "pin1": true, "type": "smd", "size": [1.5499999999999998, 1.3]}, {"layers": ["F"], "angle": -180.0, "pos": [132.97199999999998, 120.56599999999999], "shape": "rect", "pin1": true, "type": "smd", "size": [1.5499999999999998, 1.3]}, {"layers": ["F"], "angle": -180.0, "pos": [140.922, 116.06599999999999], "shape": "rect", "pin1": false, "type": "smd", "size": [1.5499999999999998, 1.3]}, {"layers": ["F"], "angle": -180.0, "pos": [132.97199999999998, 116.06599999999999], "shape": "rect", "pin1": false, "type": "smd", "size": [1.5499999999999998, 1.3]}], "drawings": [], "ref": "SW1", "bbox": {"pos": [131.921999, 114.590999], "size": [10.050002, 7.450002]}}, "D4": {"layer": "F", "center": [147.048, 119.088], "pads": [{"layers": ["F"], "angle": -0.0, "pos": [145.648, 119.088], "shape": "roundrect", "radius": 0.25, "pin1": true, "type": "smd", "size": [1.25, 1.75]}, {"layers": ["F"], "angle": -0.0, "pos": [148.44799999999998, 119.088], "shape": "roundrect", "radius": 0.25, "pin1": false, "type": "smd", "size": [1.25, 1.75]}], "drawings": [], "ref": "D4", "bbox": {"pos": [144.702999, 117.89299899999999], "size": [4.650002, 2.390002]}}, "D2": {"layer": "F", "center": [158.4, 119.012], "pads": [{"layers": ["F"], "angle": -0.0, "pos": [157.0, 119.012], "shape": "roundrect", "radius": 0.25, "pin1": true, "type": "smd", "size": [1.25, 1.75]}, {"layers": ["F"], "angle": -0.0, "pos": [159.79999999999998, 119.012], "shape": "roundrect", "radius": 0.25, "pin1": false, "type": "smd", "size": [1.25, 1.75]}], "drawings": [], "ref": "D2", "bbox": {"pos": [156.05499899999998, 117.816999], "size": [4.650002, 2.390002]}}, "D3": {"layer": "F", "center": [152.724, 119.07499999999999], "pads": [{"layers": ["F"], "angle": -0.0, "pos": [151.32399999999998, 119.07499999999999], "shape": "roundrect", "radius": 0.25, "pin1": true, "type": "smd", "size": [1.25, 1.75]}, {"layers": ["F"], "angle": -0.0, "pos": [154.124, 119.07499999999999], "shape": "roundrect", "radius": 0.25, "pin1": false, "type": "smd", "size": [1.25, 1.75]}], "drawings": [], "ref": "D3", "bbox": {"pos": [150.378999, 117.879999], "size": [4.650002, 2.390002]}}, "D1": {"layer": "F", "center": [164.076, 118.948], "pads": [{"layers": ["F"], "angle": -0.0, "pos": [165.476, 118.948], "shape": "roundrect", "radius": 0.25, "pin1": false, "type": "smd", "size": [1.25, 1.75]}, {"layers": ["F"], "angle": -0.0, "pos": [162.676, 118.948], "shape": "roundrect", "radius": 0.25, "pin1": true, "type": "smd", "size": [1.25, 1.75]}], "drawings": [], "ref": "D1", "bbox": {"pos": [161.730999, 117.75299899999999], "size": [4.650002, 2.390002]}}}, "edges": [{"start": [177.03799999999998, 74.54899999999999], "end": [175.51399999999998, 73.02499999999999], "type": "segment", "width": 0.15}, {"start": [177.03799999999998, 85.979], "end": [177.03799999999998, 74.54899999999999], "type": "segment", "width": 0.15}, {"start": [179.578, 88.51899999999999], "end": [177.03799999999998, 85.979], "type": "segment", "width": 0.15}, {"start": [179.578, 121.285], "end": [179.578, 88.51899999999999], "type": "segment", "width": 0.15}, {"start": [177.03799999999998, 123.82499999999999], "end": [179.578, 121.285], "type": "segment", "width": 0.15}, {"start": [177.03799999999998, 126.365], "end": [177.03799999999998, 123.82499999999999], "type": "segment", "width": 0.15}, {"start": [129.78058, 126.365], "end": [177.03799999999998, 126.365], "type": "segment", "width": 0.15}, {"start": [175.51399999999998, 73.02499999999999], "end": [128.060904, 73.02499999999999], "type": "segment", "width": 0.15}, {"start": [124.46391999999999, 76.621984], "end": [124.46391999999999, 121.04834], "type": "segment", "width": 0.15}, {"width": 0.15, "endangle": 270.0, "start": [128.060904, 76.621984], "radius": 3.596984, "startangle": 180.0, "type": "arc"}, {"width": 0.15, "endangle": 180.0, "start": [129.78058, 121.04834], "radius": 5.31666, "startangle": 90.0, "type": "arc"}], "bom": {"both": [[1, "10uf", "CP_Elec_4x5.4", ["C3"]], [2, "22pf", "C_1206_3216Metric", ["C1", "C2"]], [4, "330R", "R_1206_3216Metric", ["R1", "R2", "R3", "R4"]], [1, "LED_SCK", "LED_1206_3216Metric", ["D1"]], [1, "LED_PROG", "LED_1206_3216Metric", ["D2"]], [1, "LED_ERR", "LED_1206_3216Metric", ["D3"]], [1, "LED_HTE", "LED_1206_3216Metric", ["D4"]], [1, "16MHz", "Crystal_SMD_HC49-SD", ["Y1"]], [1, "SW_Push", "SW_SPST_B3S-1000", ["SW1"]], [1, "Buzzer", "Buzzer_12x9.5RM7.6", ["BZ1"]], [1, "LOGO", "mini-mods_x2", ["G01"]], [1, "28-PIN ZIF SOCKET", "DIP-28_W7.62mm_Socket", ["J5"]], [1, "MEGA_JUMPERS", "PinHeader_2x02_P2.54mm_Vertical", ["J6"]], [1, "ISP_MASTER", "PinHeader_2x03_P2.54mm_Vertical", ["J1"]], [1, "ISP_85", "PinHeader_2x03_P2.54mm_Vertical", ["J2"]], [1, "ISP_84", "PinHeader_2x03_P2.54mm_Vertical", ["J3"]], [1, "ISP_329", "PinHeader_2x03_P2.54mm_Vertical", ["J4"]], [1, "Analog", "PinHeader_1x06_P2.54mm_Vertical", ["P2"]], [1, "Power", "PinHeader_1x08_P2.54mm_Vertical", ["P1"]], [1, "Digital", "PinHeader_1x08_P2.54mm_Vertical", ["P4"]], [1, "Digital", "PinHeader_1x10_P2.54mm_Vertical", ["P3"]]], "B": [[1, "Buzzer", "Buzzer_12x9.5RM7.6", ["BZ1"]], [1, "LOGO", "mini-mods_x2", ["G01"]], [1, "Analog", "PinHeader_1x06_P2.54mm_Vertical", ["P2"]], [1, "Power", "PinHeader_1x08_P2.54mm_Vertical", ["P1"]], [1, "Digital", "PinHeader_1x08_P2.54mm_Vertical", ["P4"]], [1, "Digital", "PinHeader_1x10_P2.54mm_Vertical", ["P3"]]], "F": [[1, "10uf", "CP_Elec_4x5.4", ["C3"]], [2, "22pf", "C_1206_3216Metric", ["C1", "C2"]], [4, "330R", "R_1206_3216Metric", ["R1", "R2", "R3", "R4"]], [1, "LED_SCK", "LED_1206_3216Metric", ["D1"]], [1, "LED_PROG", "LED_1206_3216Metric", ["D2"]], [1, "LED_ERR", "LED_1206_3216Metric", ["D3"]], [1, "LED_HTE", "LED_1206_3216Metric", ["D4"]], [1, "16MHz", "Crystal_SMD_HC49-SD", ["Y1"]], [1, "SW_Push", "SW_SPST_B3S-1000", ["SW1"]], [1, "28-PIN ZIF SOCKET", "DIP-28_W7.62mm_Socket", ["J5"]], [1, "MEGA_JUMPERS", "PinHeader_2x02_P2.54mm_Vertical", ["J6"]], [1, "ISP_MASTER", "PinHeader_2x03_P2.54mm_Vertical", ["J1"]], [1, "ISP_85", "PinHeader_2x03_P2.54mm_Vertical", ["J2"]], [1, "ISP_84", "PinHeader_2x03_P2.54mm_Vertical", ["J3"]], [1, "ISP_329", "PinHeader_2x03_P2.54mm_Vertical", ["J4"]]]}, "silkscreen": {"B": [{"angle": 90.0, "horiz_justify": 0, "text": "BACK SIDE", "pos": [177.57394, 98.43007999999999], "height": 1.0, "width": 1.0}, {"angle": 0.0, "horiz_justify": 0, "text": "by Eladio Martinez\nwww.mini-mods.com", "pos": [135.62076, 116.72382499999999], "height": 1.0, "width": 1.0}, {"angle": 0.0, "horiz_justify": 0, "text": "AVR PROGRAMMING SHIELD V1.0", "pos": [150.55088, 86.81974], "height": 1.5, "width": 1.5}, {"angle": 0.0, "horiz_justify": 0, "text": "R_20180902", "pos": [131.46024, 123.9139], "height": 1.0, "width": 1.0}, {"angle": 0.0, "horiz_justify": 0, "text": "(opt.)", "pos": [140.19276, 94.89439999999999], "height": 1.0, "width": 1.0}, {"start": [155.388, 74.235], "end": [155.388, 75.565], "type": "segment", "width": 0.12}, {"start": [156.718, 74.235], "end": [155.388, 74.235], "type": "segment", "width": 0.12}, {"start": [157.988, 74.235], "end": [157.988, 76.895], "type": "segment", "width": 0.12}, {"start": [157.988, 76.895], "end": [175.828, 76.895], "type": "segment", "width": 0.12}, {"start": [157.988, 74.235], "end": [175.828, 74.235], "type": "segment", "width": 0.12}, {"start": [175.828, 74.235], "end": [175.828, 76.895], "type": "segment", "width": 0.12}, {"start": [128.464, 74.235], "end": [128.464, 75.565], "type": "segment", "width": 0.12}, {"start": [129.79399999999998, 74.235], "end": [128.464, 74.235], "type": "segment", "width": 0.12}, {"start": [131.064, 74.235], "end": [131.064, 76.895], "type": "segment", "width": 0.12}, {"start": [131.064, 76.895], "end": [153.98399999999998, 76.895], "type": "segment", "width": 0.12}, {"start": [131.064, 74.235], "end": [153.98399999999998, 74.235], "type": "segment", "width": 0.12}, {"start": [153.98399999999998, 74.235], "end": [153.98399999999998, 76.895], "type": "segment", "width": 0.12}, {"start": [160.468, 122.49499999999999], "end": [160.468, 123.82499999999999], "type": "segment", "width": 0.12}, {"start": [161.798, 122.49499999999999], "end": [160.468, 122.49499999999999], "type": "segment", "width": 0.12}, {"start": [163.06799999999998, 122.49499999999999], "end": [163.06799999999998, 125.155], "type": "segment", "width": 0.12}, {"start": [163.06799999999998, 125.155], "end": [175.828, 125.155], "type": "segment", "width": 0.12}, {"start": [163.06799999999998, 122.49499999999999], "end": [175.828, 122.49499999999999], "type": "segment", "width": 0.12}, {"start": [175.828, 122.49499999999999], "end": [175.828, 125.155], "type": "segment", "width": 0.12}, {"start": [137.608, 122.49499999999999], "end": [137.608, 123.82499999999999], "type": "segment", "width": 0.12}, {"start": [138.938, 122.49499999999999], "end": [137.608, 122.49499999999999], "type": "segment", "width": 0.12}, {"start": [140.208, 122.49499999999999], "end": [140.208, 125.155], "type": "segment", "width": 0.12}, {"start": [140.208, 125.155], "end": [158.048, 125.155], "type": "segment", "width": 0.12}, {"start": [140.208, 122.49499999999999], "end": [158.048, 122.49499999999999], "type": "segment", "width": 0.12}, {"start": [158.048, 122.49499999999999], "end": [158.048, 125.155], "type": "segment", "width": 0.12}, {"angle": 0.0, "horiz_justify": 0, "text": "BZ1", "pos": [140.1342, 101.73718], "height": 1.0, "width": 1.0}, {"angle": 0.0, "horiz_justify": 0, "text": "+", "pos": [136.36499999999998, 100.3986], "height": 1.0, "width": 1.0}, {"start": [140.17499999999998, 97.8586], "radius": 6.1, "type": "circle", "width": 0.12}, {"angle": [180.0], "type": "polygon", "pos": [159.38245999999998, 116.84508], "polygons": []}, {"angle": [180.0], "type": "polygon", "pos": [159.38245999999998, 116.84508], "polygons": []}, {"angle": [180.0], "type": "polygon", "pos": [159.38245999999998, 116.84508], "polygons": []}, {"angle": [180.0], "type": "polygon", "pos": [159.38245999999998, 116.84508], "polygons": []}, {"angle": [180.0], "type": "polygon", "pos": [159.38245999999998, 116.84508], "polygons": []}, {"angle": [180.0], "type": "polygon", "pos": [159.38245999999998, 116.84508], "polygons": []}, {"angle": [180.0], "type": "polygon", "pos": [159.38245999999998, 116.84508], "polygons": []}, {"angle": [180.0], "type": "polygon", "pos": [159.38245999999998, 116.84508], "polygons": []}, {"angle": [180.0], "type": "polygon", "pos": [159.38245999999998, 116.84508], "polygons": []}, {"angle": [180.0], "type": "polygon", "pos": [159.38245999999998, 116.84508], "polygons": []}, {"angle": [180.0], "type": "polygon", "pos": [159.38245999999998, 116.84508], "polygons": []}, {"angle": [180.0], "type": "polygon", "pos": [164.28974, 97.8789], "polygons": []}, {"angle": [180.0], "type": "polygon", "pos": [164.28974, 97.8789], "polygons": []}, {"angle": [180.0], "type": "polygon", "pos": [164.28974, 97.8789], "polygons": []}, {"angle": [180.0], "type": "polygon", "pos": [164.28974, 97.8789], "polygons": []}, {"angle": [180.0], "type": "polygon", "pos": [164.28974, 97.8789], "polygons": []}, {"angle": [180.0], "type": "polygon", "pos": [164.28974, 97.8789], "polygons": []}, {"angle": [180.0], "type": "polygon", "pos": [164.28974, 97.8789], "polygons": []}, {"angle": [180.0], "type": "polygon", "pos": [164.28974, 97.8789], "polygons": []}, {"angle": [180.0], "type": "polygon", "pos": [164.28974, 97.8789], "polygons": []}, {"angle": [180.0], "type": "polygon", "pos": [164.28974, 97.8789], "polygons": []}, {"angle": [180.0], "type": "polygon", "pos": [164.28974, 97.8789], "polygons": []}, {"angle": [180.0], "type": "polygon", "pos": [164.28974, 97.8789], "polygons": []}, {"angle": [180.0], "type": "polygon", "pos": [164.28974, 97.8789], "polygons": []}], "F": [{"angle": 90.0, "horiz_justify": 0, "text": "FRONT SIDE", "pos": [126.32181999999999, 98.97618], "height": 1.0, "width": 1.0}, {"angle": 0.0, "horiz_justify": 0, "text": "AVR PROGRAMMING SHIELD V1.0", "pos": [142.31112, 100.18267999999999], "height": 1.0, "width": 1.0}, {"angle": 0.0, "horiz_justify": 0, "text": "R_20180902", "pos": [131.56946, 123.83008], "height": 1.0, "width": 1.0}, {"angle": 0.0, "horiz_justify": 0, "text": "\u2190", "pos": [140.30706, 95.7453], "height": 5.0, "width": 5.0}, {"angle": 0.0, "horiz_justify": 0, "text": "A5", "pos": [129.76098, 73.79715999999999], "height": 0.8999999999999999, "width": 0.8999999999999999}, {"angle": 0.0, "horiz_justify": 0, "text": "A4", "pos": [132.29844, 73.79715999999999], "height": 0.8999999999999999, "width": 0.8999999999999999}, {"angle": 0.0, "horiz_justify": 0, "text": "AREF", "pos": [134.72922, 73.80315999999999], "height": 0.7, "width": 0.7}, {"angle": 0.0, "horiz_justify": 0, "text": "GND", "pos": [137.52576, 73.79715999999999], "height": 0.8999999999999999, "width": 0.8999999999999999}, {"angle": 0.0, "horiz_justify": 0, "text": "13", "pos": [139.93367999999998, 73.79715999999999], "height": 0.8999999999999999, "width": 0.8999999999999999}, {"angle": 0.0, "horiz_justify": 0, "text": "12", "pos": [142.45082, 73.79715999999999], "height": 0.8999999999999999, "width": 0.8999999999999999}, {"angle": 0.0, "horiz_justify": 0, "text": "11", "pos": [145.01113999999998, 73.79715999999999], "height": 0.8999999999999999, "width": 0.8999999999999999}, {"angle": 0.0, "horiz_justify": 0, "text": "10", "pos": [147.50542, 73.79715999999999], "height": 0.8999999999999999, "width": 0.8999999999999999}, {"angle": 0.0, "horiz_justify": 0, "text": "9", "pos": [150.08606, 73.79715999999999], "height": 0.8999999999999999, "width": 0.8999999999999999}, {"angle": 0.0, "horiz_justify": 0, "text": "8", "pos": [152.71241999999998, 73.79715999999999], "height": 0.8999999999999999, "width": 0.8999999999999999}, {"angle": 0.0, "horiz_justify": 0, "text": "7", "pos": [156.6418, 73.79715999999999], "height": 0.8999999999999999, "width": 0.8999999999999999}, {"angle": 0.0, "horiz_justify": 0, "text": "6", "pos": [159.24022, 73.79715999999999], "height": 0.8999999999999999, "width": 0.8999999999999999}, {"angle": 0.0, "horiz_justify": 0, "text": "5", "pos": [161.7472, 73.79715999999999], "height": 0.8999999999999999, "width": 0.8999999999999999}, {"angle": 0.0, "horiz_justify": 0, "text": "4", "pos": [164.34308, 73.79715999999999], "height": 0.8999999999999999, "width": 0.8999999999999999}, {"angle": 0.0, "horiz_justify": 0, "text": "3", "pos": [166.95927999999998, 73.79715999999999], "height": 0.8999999999999999, "width": 0.8999999999999999}, {"angle": 0.0, "horiz_justify": 0, "text": "2", "pos": [169.41546, 73.79715999999999], "height": 0.8999999999999999, "width": 0.8999999999999999}, {"angle": 0.0, "horiz_justify": 0, "text": "1", "pos": [171.94021999999998, 73.79715999999999], "height": 0.8999999999999999, "width": 0.8999999999999999}, {"angle": 0.0, "horiz_justify": 0, "text": "0", "pos": [174.46498, 73.79715999999999], "height": 0.8999999999999999, "width": 0.8999999999999999}, {"angle": 0.0, "horiz_justify": 0, "text": "IOR", "pos": [141.49578, 125.73761999999999], "height": 0.8999999999999999, "width": 0.8999999999999999}, {"angle": 0.0, "horiz_justify": 0, "text": "RST", "pos": [143.98498, 125.73761999999999], "height": 0.8999999999999999, "width": 0.8999999999999999}, {"angle": 0.0, "horiz_justify": 0, "text": "3.3V", "pos": [146.5707, 125.74361999999999], "height": 0.7, "width": 0.7}, {"angle": 0.0, "horiz_justify": 0, "text": "5V", "pos": [149.10816, 125.73761999999999], "height": 0.8999999999999999, "width": 0.8999999999999999}, {"angle": 0.0, "horiz_justify": 0, "text": "GND", "pos": [152.93594, 125.73761999999999], "height": 0.8999999999999999, "width": 0.8999999999999999}, {"angle": 0.0, "horiz_justify": 0, "text": "Vin", "pos": [156.74339999999998, 125.73761999999999], "height": 0.8999999999999999, "width": 0.8999999999999999}, {"angle": 0.0, "horiz_justify": 0, "text": "A0", "pos": [161.81832, 125.73761999999999], "height": 0.8999999999999999, "width": 0.8999999999999999}, {"angle": 0.0, "horiz_justify": 0, "text": "A1", "pos": [164.39896, 125.73761999999999], "height": 0.8999999999999999, "width": 0.8999999999999999}, {"angle": 0.0, "horiz_justify": 0, "text": "A2", "pos": [166.8653, 125.73761999999999], "height": 0.8999999999999999, "width": 0.8999999999999999}, {"angle": 0.0, "horiz_justify": 0, "text": "A3", "pos": [169.40529999999998, 125.73761999999999], "height": 0.8999999999999999, "width": 0.8999999999999999}, {"angle": 0.0, "horiz_justify": 0, "text": "A4", "pos": [171.94276, 125.73761999999999], "height": 0.8999999999999999, "width": 0.8999999999999999}, {"angle": 0.0, "horiz_justify": 0, "text": "A5", "pos": [174.43449999999999, 125.73761999999999], "height": 0.8999999999999999, "width": 0.8999999999999999}, {"angle": 0.0, "horiz_justify": 0, "text": "53", "pos": [177.05831999999998, 119.23013999999999], "height": 1.0, "width": 1.0}, {"angle": 0.0, "horiz_justify": 0, "text": "51", "pos": [176.9491, 116.69775999999999], "height": 1.0, "width": 1.0}, {"angle": 0.0, "horiz_justify": 0, "text": "52", "pos": [168.52646, 119.3038], "height": 1.0, "width": 1.0}, {"angle": 0.0, "horiz_justify": 0, "text": "50", "pos": [168.52646, 116.69775999999999], "height": 1.0, "width": 1.0}, {"angle": 0.0, "horiz_justify": 0, "text": "ISP", "pos": [172.73015999999998, 112.81917999999999], "height": 1.0, "width": 1.0}, {"angle": 0.0, "horiz_justify": 0, "text": "1", "pos": [152.15616, 102.68965999999999], "height": 1.0, "width": 1.0}, {"angle": 0.0, "horiz_justify": 0, "text": "1", "pos": [140.1318, 102.68965999999999], "height": 1.0, "width": 1.0}, {"angle": 0.0, "horiz_justify": 0, "text": "1", "pos": [128.1303, 102.68965999999999], "height": 1.0, "width": 1.0}, {"angle": 0.0, "horiz_justify": 0, "text": "168/328", "pos": [154.96032, 112.91315999999999], "height": 1.0, "width": 1.0}, {"angle": 0.0, "horiz_justify": 0, "text": "44/84", "pos": [142.92072, 112.91315999999999], "height": 1.0, "width": 1.0}, {"angle": 0.0, "horiz_justify": 0, "text": "48/85", "pos": [130.683, 112.91315999999999], "height": 1.0, "width": 1.0}, {"angle": 0.0, "horiz_justify": 0, "text": "RESET", "pos": [136.79932, 113.90122], "height": 1.0, "width": 1.0}, {"angle": 0.0, "horiz_justify": 0, "text": "SCK", "pos": [164.08908, 116.85777999999999], "height": 1.0, "width": 1.0}, {"angle": 0.0, "horiz_justify": 0, "text": "PROG", "pos": [158.32327999999998, 116.85777999999999], "height": 1.0, "width": 1.0}, {"angle": 0.0, "horiz_justify": 0, "text": "ERROR", "pos": [152.69209999999998, 116.85777999999999], "height": 1.0, "width": 1.0}, {"angle": 0.0, "horiz_justify": 0, "text": "HEART", "pos": [146.94916, 116.85777999999999], "height": 1.0, "width": 1.0}, {"angle": 0.0, "horiz_justify": 0, "text": "GND", "pos": [177.567578, 110.11916], "height": 1.0, "width": 1.0}, {"angle": 0.0, "horiz_justify": 0, "text": "VCC", "pos": [177.47234, 105.08742], "height": 1.0, "width": 1.0}, {"angle": 90.0, "horiz_justify": 0, "text": "1", "pos": [138.938, 121.285], "height": 1.0, "width": 1.0}, {"angle": 0.0, "horiz_justify": 0, "text": "D4", "pos": [146.99465999999998, 119.10324], "height": 0.7999999999999999, "width": 0.7999999999999999}, {"start": [148.648, 117.95299999999999], "end": [144.763, 117.95299999999999], "type": "segment", "width": 0.12}, {"start": [144.763, 117.95299999999999], "end": [144.763, 120.223], "type": "segment", "width": 0.12}, {"start": [144.763, 120.223], "end": [148.648, 120.223], "type": "segment", "width": 0.12}, {"angle": 90.0, "horiz_justify": 0, "text": "R4", "pos": [148.88997999999998, 109.73339999999999], "height": 0.7999999999999999, "width": 0.7999999999999999}, {"start": [149.828, 109.13993599999999], "end": [149.828, 110.34406399999999], "type": "segment", "width": 0.12}, {"start": [148.00799999999998, 109.13993599999999], "end": [148.00799999999998, 110.34406399999999], "type": "segment", "width": 0.12}, {"start": [140.313, 103.842], "end": [141.643, 103.842], "type": "segment", "width": 0.12}, {"start": [140.313, 105.172], "end": [140.313, 103.842], "type": "segment", "width": 0.12}, {"start": [142.91299999999998, 103.842], "end": [145.513, 103.842], "type": "segment", "width": 0.12}, {"start": [142.91299999999998, 106.442], "end": [142.91299999999998, 103.842], "type": "segment", "width": 0.12}, {"start": [140.313, 106.442], "end": [142.91299999999998, 106.442], "type": "segment", "width": 0.12}, {"start": [145.513, 103.842], "end": [145.513, 111.582], "type": "segment", "width": 0.12}, {"start": [140.313, 106.442], "end": [140.313, 111.582], "type": "segment", "width": 0.12}, {"start": [140.313, 111.582], "end": [145.513, 111.582], "type": "segment", "width": 0.12}, {"start": [128.314, 111.582], "end": [133.51399999999998, 111.582], "type": "segment", "width": 0.12}, {"start": [128.314, 106.442], "end": [128.314, 111.582], "type": "segment", "width": 0.12}, {"start": [133.51399999999998, 103.842], "end": [133.51399999999998, 111.582], "type": "segment", "width": 0.12}, {"start": [128.314, 106.442], "end": [130.914, 106.442], "type": "segment", "width": 0.12}, {"start": [130.914, 106.442], "end": [130.914, 103.842], "type": "segment", "width": 0.12}, {"start": [130.914, 103.842], "end": [133.51399999999998, 103.842], "type": "segment", "width": 0.12}, {"start": [128.314, 105.172], "end": [128.314, 103.842], "type": "segment", "width": 0.12}, {"start": [128.314, 103.842], "end": [129.644, 103.842], "type": "segment", "width": 0.12}, {"start": [152.31199999999998, 103.842], "end": [153.642, 103.842], "type": "segment", "width": 0.12}, {"start": [152.31199999999998, 105.172], "end": [152.31199999999998, 103.842], "type": "segment", "width": 0.12}, {"start": [154.912, 103.842], "end": [157.512, 103.842], "type": "segment", "width": 0.12}, {"start": [154.912, 106.442], "end": [154.912, 103.842], "type": "segment", "width": 0.12}, {"start": [152.31199999999998, 106.442], "end": [154.912, 106.442], "type": "segment", "width": 0.12}, {"start": [157.512, 103.842], "end": [157.512, 111.582], "type": "segment", "width": 0.12}, {"start": [152.31199999999998, 106.442], "end": [152.31199999999998, 111.582], "type": "segment", "width": 0.12}, {"start": [152.31199999999998, 111.582], "end": [157.512, 111.582], "type": "segment", "width": 0.12}, {"start": [170.018, 111.582], "end": [175.218, 111.582], "type": "segment", "width": 0.12}, {"start": [170.018, 106.442], "end": [170.018, 111.582], "type": "segment", "width": 0.12}, {"start": [175.218, 103.842], "end": [175.218, 111.582], "type": "segment", "width": 0.12}, {"start": [170.018, 106.442], "end": [172.618, 106.442], "type": "segment", "width": 0.12}, {"start": [172.618, 106.442], "end": [172.618, 103.842], "type": "segment", "width": 0.12}, {"start": [172.618, 103.842], "end": [175.218, 103.842], "type": "segment", "width": 0.12}, {"start": [170.018, 105.172], "end": [170.018, 103.842], "type": "segment", "width": 0.12}, {"start": [170.018, 103.842], "end": [171.34799999999998, 103.842], "type": "segment", "width": 0.12}, {"angle": 0.0, "horiz_justify": 0, "text": "SW1", "pos": [136.947, 118.2525], "height": 1.0, "width": 1.0}, {"start": [140.09699999999998, 121.51599999999999], "end": [140.09699999999998, 121.76599999999999], "type": "segment", "width": 0.12}, {"start": [140.09699999999998, 121.76599999999999], "end": [133.797, 121.76599999999999], "type": "segment", "width": 0.12}, {"start": [133.797, 121.76599999999999], "end": [133.797, 121.51599999999999], "type": "segment", "width": 0.12}, {"start": [140.09699999999998, 117.01599999999999], "end": [140.09699999999998, 119.616], "type": "segment", "width": 0.12}, {"start": [133.797, 115.116], "end": [133.797, 114.866], "type": "segment", "width": 0.12}, {"start": [133.797, 114.866], "end": [140.09699999999998, 114.866], "type": "segment", "width": 0.12}, {"start": [140.09699999999998, 114.866], "end": [140.09699999999998, 115.116], "type": "segment", "width": 0.12}, {"start": [133.797, 119.616], "end": [133.797, 117.01599999999999], "type": "segment", "width": 0.12}, {"angle": 90.0, "horiz_justify": 0, "text": "C1", "pos": [160.19505999999998, 97.90428], "height": 0.7999999999999999, "width": 0.7999999999999999}, {"start": [161.13299999999998, 97.30983599999999], "end": [161.13299999999998, 98.513964], "type": "segment", "width": 0.12}, {"start": [159.313, 97.30983599999999], "end": [159.313, 98.513964], "type": "segment", "width": 0.12}, {"angle": 90.0, "horiz_justify": 0, "text": "C2", "pos": [177.68591999999998, 97.90428], "height": 0.7999999999999999, "width": 0.7999999999999999}, {"start": [176.781, 97.30983599999999], "end": [176.781, 98.513964], "type": "segment", "width": 0.12}, {"start": [178.601, 97.30983599999999], "end": [178.601, 98.513964], "type": "segment", "width": 0.12}, {"angle": 0.0, "horiz_justify": 0, "text": "C3", "pos": [164.38848, 105.45317999999999], "height": 0.7999999999999999, "width": 0.7999999999999999}, {"start": [162.09799999999998, 101.62599999999999], "end": [162.09799999999998, 102.826], "type": "segment", "width": 0.12}, {"start": [162.09799999999998, 106.146], "end": [162.09799999999998, 104.946], "type": "segment", "width": 0.12}, {"start": [165.553563, 106.146], "end": [162.09799999999998, 106.146], "type": "segment", "width": 0.12}, {"start": [165.553563, 101.62599999999999], "end": [162.09799999999998, 101.62599999999999], "type": "segment", "width": 0.12}, {"start": [166.618, 102.69043699999999], "end": [166.618, 102.826], "type": "segment", "width": 0.12}, {"start": [166.618, 105.08156299999999], "end": [166.618, 104.946], "type": "segment", "width": 0.12}, {"start": [166.618, 105.08156299999999], "end": [165.553563, 106.146], "type": "segment", "width": 0.12}, {"start": [166.618, 102.69043699999999], "end": [165.553563, 101.62599999999999], "type": "segment", "width": 0.12}, {"start": [167.358, 105.446], "end": [166.858, 105.446], "type": "segment", "width": 0.12}, {"start": [167.108, 105.696], "end": [167.108, 105.196], "type": "segment", "width": 0.12}, {"angle": 0.0, "horiz_justify": 0, "text": "D1", "pos": [164.08661999999998, 118.91752], "height": 0.7999999999999999, "width": 0.7999999999999999}, {"start": [161.791, 120.083], "end": [165.676, 120.083], "type": "segment", "width": 0.12}, {"start": [161.791, 117.81299999999999], "end": [161.791, 120.083], "type": "segment", "width": 0.12}, {"start": [165.676, 117.81299999999999], "end": [161.791, 117.81299999999999], "type": "segment", "width": 0.12}, {"angle": 0.0, "horiz_justify": 0, "text": "D2", "pos": [158.4, 119.03994], "height": 0.7999999999999999, "width": 0.7999999999999999}, {"start": [160.0, 117.877], "end": [156.11499999999998, 117.877], "type": "segment", "width": 0.12}, {"start": [156.11499999999998, 117.877], "end": [156.11499999999998, 120.14699999999999], "type": "segment", "width": 0.12}, {"start": [156.11499999999998, 120.14699999999999], "end": [160.0, 120.14699999999999], "type": "segment", "width": 0.12}, {"angle": 0.0, "horiz_justify": 0, "text": "D3", "pos": [152.73162, 119.05722], "height": 0.7999999999999999, "width": 0.7999999999999999}, {"start": [154.32399999999998, 117.94], "end": [150.439, 117.94], "type": "segment", "width": 0.12}, {"start": [150.439, 117.94], "end": [150.439, 120.21], "type": "segment", "width": 0.12}, {"start": [150.439, 120.21], "end": [154.32399999999998, 120.21], "type": "segment", "width": 0.12}, {"angle": 90.0, "horiz_justify": 0, "text": "J5", "pos": [139.57816, 86.63436], "height": 1.0, "width": 1.0}, {"width": 0.12, "endangle": 90.0, "start": [135.19, 86.80199999999999], "radius": 1.0, "startangle": -90.0, "type": "arc"}, {"start": [135.19, 87.80199999999999], "end": [135.19, 89.452], "type": "segment", "width": 0.12}, {"start": [135.19, 89.452], "end": [170.87, 89.452], "type": "segment", "width": 0.12}, {"start": [170.87, 89.452], "end": [170.87, 84.152], "type": "segment", "width": 0.12}, {"start": [170.87, 84.152], "end": [135.19, 84.152], "type": "segment", "width": 0.12}, {"start": [135.19, 84.152], "end": [135.19, 85.80199999999999], "type": "segment", "width": 0.12}, {"start": [135.13, 91.942], "end": [170.92999999999998, 91.942], "type": "segment", "width": 0.12}, {"start": [170.92999999999998, 91.942], "end": [170.92999999999998, 81.66199999999999], "type": "segment", "width": 0.12}, {"start": [170.92999999999998, 81.66199999999999], "end": [135.13, 81.66199999999999], "type": "segment", "width": 0.12}, {"start": [135.13, 81.66199999999999], "end": [135.13, 91.942], "type": "segment", "width": 0.12}, {"start": [170.148, 120.553], "end": [175.34799999999998, 120.553], "type": "segment", "width": 0.12}, {"start": [170.148, 117.95299999999999], "end": [170.148, 120.553], "type": "segment", "width": 0.12}, {"start": [175.34799999999998, 115.353], "end": [175.34799999999998, 120.553], "type": "segment", "width": 0.12}, {"start": [170.148, 117.95299999999999], "end": [172.748, 117.95299999999999], "type": "segment", "width": 0.12}, {"start": [172.748, 117.95299999999999], "end": [172.748, 115.353], "type": "segment", "width": 0.12}, {"start": [172.748, 115.353], "end": [175.34799999999998, 115.353], "type": "segment", "width": 0.12}, {"start": [170.148, 116.68299999999999], "end": [170.148, 115.353], "type": "segment", "width": 0.12}, {"start": [170.148, 115.353], "end": [171.47799999999998, 115.353], "type": "segment", "width": 0.12}, {"angle": 90.0, "horiz_justify": 0, "text": "R1", "pos": [160.26922, 109.73438], "height": 0.7999999999999999, "width": 0.7999999999999999}, {"start": [161.197, 109.13993599999999], "end": [161.197, 110.34406399999999], "type": "segment", "width": 0.12}, {"start": [159.37699999999998, 109.13993599999999], "end": [159.37699999999998, 110.34406399999999], "type": "segment", "width": 0.12}, {"angle": 90.0, "horiz_justify": 0, "text": "R2", "pos": [163.740401, 109.78111899999999], "height": 0.7999999999999999, "width": 0.7999999999999999}, {"start": [162.822, 109.13993599999999], "end": [162.822, 110.34406399999999], "type": "segment", "width": 0.12}, {"start": [164.642, 109.13993599999999], "end": [164.642, 110.34406399999999], "type": "segment", "width": 0.12}, {"angle": 90.0, "horiz_justify": 0, "text": "R3", "pos": [167.14752, 109.73483999999999], "height": 0.7999999999999999, "width": 0.7999999999999999}, {"start": [168.088, 109.13993599999999], "end": [168.088, 110.34406399999999], "type": "segment", "width": 0.12}, {"start": [166.268, 109.13993599999999], "end": [166.268, 110.34406399999999], "type": "segment", "width": 0.12}, {"angle": 0.0, "horiz_justify": 0, "text": "Y1", "pos": [168.97477999999998, 97.90173999999999], "height": 1.0, "width": 1.0}, {"start": [174.857, 95.36189999999999], "end": [162.257, 95.36189999999999], "type": "segment", "width": 0.12}, {"start": [162.257, 95.36189999999999], "end": [162.257, 100.4619], "type": "segment", "width": 0.12}, {"start": [162.257, 100.4619], "end": [174.857, 100.4619], "type": "segment", "width": 0.12}]}, "edges_bbox": {"minx": 124.388919, "miny": 72.94999899999999, "maxx": 179.653001, "maxy": 126.440001}, "metadata": {"date": "2018-09-02", "company": "Eladio Martinez", "revision": "1.0", "title": "AVR Programming Shield"}}
+///////////////////////////////////////////////
+
+///////////////////////////////////////////////
+/* PCB rendering code */
+
+var redrawOnDrag = true;
+
+function deg2rad(deg) {
+  return deg * Math.PI / 180;
+}
+
+function drawtext(ctx, scalefactor, text, color, flip) {
+  ctx.save();
+  ctx.translate(...text.pos);
+  angle = -text.angle;
+  if (flip) {
+    ctx.scale(-1, 1);
+    angle = -angle;
+  }
+  txt = text.text.split("\n")
+  ctx.rotate(deg2rad(angle));
+  ctx.scale(text.width, text.height);
+  ctx.fillStyle = color;
+  switch (text.horiz_justify) {
+    case -1:
+      ctx.textAlign = "left";
+      break;
+    case 0:
+      ctx.textAlign = "center";
+      break;
+    case 1:
+      ctx.textAlign = "right";
+      break;
+  }
+  for (i = 0; i < txt.length; i++) {
+    offset = -(txt.length - 1) * 0.8 + i * 1.6;
+    ctx.fillText(txt[i], 0, offset);
+  }
+  ctx.restore();
+}
+
+function drawedge(ctx, scalefactor, edge, color) {
+  ctx.strokeStyle = color;
+  ctx.lineWidth = Math.max(1 / scalefactor, edge.width);
+  ctx.lineCap = "round";
+  if (edge.type == "segment") {
+    ctx.beginPath();
+    ctx.moveTo(...edge.start);
+    ctx.lineTo(...edge.end);
+    ctx.stroke();
+  }
+  if (edge.type == "arc") {
+    ctx.beginPath();
+    ctx.arc(
+      ...edge.start,
+      edge.radius,
+      deg2rad(edge.startangle),
+      deg2rad(edge.endangle));
+    ctx.stroke();
+  }
+  if (edge.type == "circle") {
+    ctx.beginPath();
+    ctx.arc(
+      ...edge.start,
+      edge.radius,
+      0, 2 * Math.PI);
+    ctx.stroke();
+  }
+}
+
+function drawOblong(ctx, scalefactor, color, size) {
+  ctx.beginPath();
+  ctx.strokeStyle = color;
+  ctx.lineCap = "round";
+  if (size[0] > size[1]) {
+    ctx.lineWidth = size[1];
+    var from = [-size[0] / 2 + size[1] / 2, 0];
+    var to = [-from[0], 0];
+  } else {
+    ctx.lineWidth = size[0];
+    var from = [0, -size[1] / 2 + size[0] / 2];
+    var to = [0, -from[1]];
+  }
+  ctx.moveTo(...from);
+  ctx.lineTo(...to);
+  ctx.stroke();
+}
+
+function drawRoundRect(ctx, scalefactor, color, size, radius) {
+  ctx.beginPath();
+  ctx.strokeStyle = color;
+  x = size[0] * -0.5;
+  y = size[1] * -0.5;
+  width = size[0];
+  height = size[1];
+  ctx.moveTo(x, 0);
+  ctx.arcTo(x, y + height, x + width, y + height, radius);
+  ctx.arcTo(x + width, y + height, x + width, y, radius);
+  ctx.arcTo(x + width, y, x, y, radius);
+  ctx.arcTo(x, y, x, y + height, radius);
+  ctx.closePath();
+  ctx.fill();
+}
+
+function drawPolygons(ctx, scalefactor, color, polygons) {
+  ctx.fillStyle = color;
+  for (polygon of polygons) {
+    ctx.beginPath();
+    for (vertex of polygon) {
+      ctx.lineTo(...vertex)
+    }
+    ctx.closePath();
+    ctx.fill();
+  }
+}
+
+function drawPolygonShape(ctx, scalefactor, shape, color) {
+  ctx.save();
+  ctx.translate(...shape.pos);
+  ctx.rotate(deg2rad(-shape.angle));
+  drawPolygons(ctx, scalefactor, color, shape.polygons);
+  ctx.restore();
+}
+
+function drawDrawing(ctx, layer, scalefactor, drawing, color) {
+  if (["segment", "arc", "circle"].includes(drawing.type)) {
+    drawedge(ctx, scalefactor, drawing, color);
+  } else if (drawing.type == "polygon") {
+    drawPolygonShape(ctx, scalefactor, drawing, color);
+  } else {
+    drawtext(ctx, scalefactor, drawing, color, layer == "B");
+  }
+}
+
+function drawModule(ctx, layer, scalefactor, module, highlight) {
+  var padcolor = "#808080";
+  if (highlight) {
+    padcolor = "#D04040";
+    // draw bounding box
+    if (module.layer == layer) {
+      ctx.save();
+      ctx.globalAlpha = 0.2;
+      ctx.translate(...module.bbox.pos);
+      ctx.fillStyle = "#D04040";
+      ctx.fillRect(
+        0, 0,
+        ...module.bbox.size);
+      ctx.globalAlpha = 1;
+      ctx.strokeStyle = "#D04040";
+      ctx.lineWidth = 2 / scalefactor;
+      ctx.strokeRect(
+        0, 0,
+        ...module.bbox.size);
+      ctx.restore();
+    }
+  }
+  // draw drawings
+  for (drawing of module.drawings) {
+    if (drawing.layer == layer) {
+      drawDrawing(ctx, layer, scalefactor, drawing.drawing, padcolor);
+    }
+  }
+  // draw pads
+  for (pad of module.pads) {
+    if (pad.layers.includes(layer)) {
+      ctx.save();
+      ctx.translate(...pad.pos);
+      ctx.rotate(deg2rad(pad.angle));
+      ctx.fillStyle = padcolor;
+      if (pad.shape == "rect") {
+        ctx.fillRect(
+          ...pad.size.map(c => -c * 0.5),
+          ...pad.size);
+      } else if (pad.shape == "oval") {
+        drawOblong(ctx, scalefactor, padcolor, pad.size)
+      } else if (pad.shape == "circle") {
+        ctx.beginPath();
+        ctx.arc(0, 0, pad.size[0] / 2, 0, 2 * Math.PI);
+        ctx.fill();
+      } else if (pad.shape == "roundrect") {
+        drawRoundRect(ctx, scalefactor, padcolor, pad.size, pad.radius)
+      } else if (pad.shape == "custom") {
+        drawPolygons(ctx, scalefactor, padcolor, pad.polygons)
+      }
+      if (pad.type == "th") {
+        if (pad.drillshape == "oblong") {
+          drawOblong(ctx, scalefactor, "#CCCCCC", pad.drillsize)
+        } else {
+          ctx.fillStyle = "#CCCCCC"
+          ctx.beginPath();
+          ctx.arc(0, 0, pad.drillsize[0] / 2, 0, 2 * Math.PI);
+          ctx.fill();
+        }
+      }
+      ctx.restore();
+    }
+  }
+}
+
+function drawEdges(canvas, scalefactor) {
+  var ctx = canvas.getContext("2d");
+  var edgecolor = getComputedStyle(topmostdiv).getPropertyValue('--pcb-edge-color');
+  for (edge of pcbdata.edges) {
+    drawedge(ctx, scalefactor, edge, edgecolor);
+  }
+}
+
+function drawModules(canvas, layer, scalefactor, highlightedRefs) {
+  var ctx = canvas.getContext("2d");
+  for (i in pcbdata.modules) {
+    var mod = pcbdata.modules[i];
+    var highlight = highlightedRefs.includes(mod.ref);
+    if (highlightedRefs.length == 0 || highlight) {
+      drawModule(ctx, layer, scalefactor, mod, highlight);
+    }
+  }
+}
+
+function drawSilkscreen(canvas, layer, scalefactor) {
+  var ctx = canvas.getContext("2d");
+  for (d of pcbdata.silkscreen[layer]) {
+    if (["segment", "arc", "circle"].includes(d.type)) {
+      drawedge(ctx, scalefactor, d, "#aa4");
+    } else if (d.type == "polygon") {
+      drawPolygonShape(ctx, scalefactor, d, "#4aa");
+    } else {
+      drawtext(ctx, scalefactor, d, "#4aa", layer == "B");
+    }
+  }
+}
+
+function clearCanvas(canvas) {
+  var ctx = canvas.getContext("2d");
+  ctx.save();
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.restore();
+}
+
+function drawHighlightsOnLayer(canvasdict) {
+  clearCanvas(canvasdict.highlight);
+  drawModules(canvasdict.highlight, canvasdict.layer,
+    canvasdict.transform.s, highlightedRefs);
+}
+
+function drawHighlights() {
+  drawHighlightsOnLayer(allcanvas.front);
+  drawHighlightsOnLayer(allcanvas.back);
+}
+
+function drawBackground(canvasdict) {
+  clearCanvas(canvasdict.bg);
+  clearCanvas(canvasdict.silk);
+  drawEdges(canvasdict.bg, canvasdict.transform.s);
+  drawModules(canvasdict.bg, canvasdict.layer, canvasdict.transform.s, []);
+  drawSilkscreen(canvasdict.silk, canvasdict.layer, canvasdict.transform.s);
+}
+
+function prepareCanvas(canvas, flip, transform) {
+  var ctx = canvas.getContext("2d");
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  fontsize = 1.55;
+  ctx.font = "bold " + fontsize + "px Consolas,\"DejaVu Sans Mono\",Monaco,monospace";
+  ctx.textBaseline = "middle";
+  ctx.scale(transform.zoom, transform.zoom);
+  ctx.translate(transform.panx, transform.pany);
+  if (flip) {
+    ctx.scale(-1, 1);
+  }
+  ctx.translate(transform.x, transform.y);
+  ctx.scale(transform.s, transform.s);
+}
+
+function prepareLayer(canvasdict) {
+  var flip = (canvasdict.layer == "B");
+  for (c of ["bg", "silk", "highlight"]) {
+    prepareCanvas(canvasdict[c], flip, canvasdict.transform);
+  }
+}
+
+function recalcLayerScale(canvasdict) {
+  canvasdivid = {
+    "F": "frontcanvas",
+    "B": "backcanvas"
+  }[canvasdict.layer];
+  var width = document.getElementById(canvasdivid).clientWidth * 2;
+  var height = document.getElementById(canvasdivid).clientHeight * 2;
+  var bbox = pcbdata.edges_bbox;
+  var scalefactor = 0.98 * Math.min(
+    width / (bbox.maxx - bbox.minx),
+    height / (bbox.maxy - bbox.miny)
+  );
+  if (scalefactor < 0.1) {
+    scalefactor = 1;
+  }
+  canvasdict.transform.s = scalefactor;
+  var flip = (canvasdict.layer == "B");
+  if (flip) {
+    canvasdict.transform.x = -((bbox.maxx + bbox.minx) * scalefactor + width) * 0.5;
+  } else {
+    canvasdict.transform.x = -((bbox.maxx + bbox.minx) * scalefactor - width) * 0.5;
+  }
+  canvasdict.transform.y = -((bbox.maxy + bbox.miny) * scalefactor - height) * 0.5;
+  for (c of ["bg", "silk", "highlight"]) {
+    canvas = canvasdict[c];
+    canvas.width = width;
+    canvas.height = height;
+    canvas.style.width = (width / 2) + "px";
+    canvas.style.height = (height / 2) + "px";
+  }
+  console.log("Scale factor " + canvasdivid + ": ", canvasdict.transform);
+}
+
+function redrawCanvas(layerdict) {
+  prepareLayer(layerdict);
+  drawBackground(layerdict);
+  drawHighlights(layerdict);
+}
+
+function resizeCanvas(layerdict) {
+  recalcLayerScale(layerdict);
+  redrawCanvas(layerdict);
+}
+
+function resizeAll() {
+  resizeCanvas(allcanvas.front);
+  resizeCanvas(allcanvas.back);
+}
+
+function bboxScan(layer, x, y) {
+  var result = [];
+  for (var i in pcbdata.modules) {
+    var module = pcbdata.modules[i];
+    if (module.layer == layer) {
+      var b = module.bbox;
+      if (b.pos[0] <= x && b.pos[0] + b.size[0] >= x &&
+        b.pos[1] <= y && b.pos[1] + b.size[1] >= y) {
+        result.push(module.ref);
+      }
+    }
+  }
+  return result;
+}
+
+function handleMouseDown(e, layerdict) {
+  if (e.which != 1) {
+    return;
+  }
+  e.preventDefault();
+  e.stopPropagation();
+  layerdict.transform.mousestartx = e.offsetX;
+  layerdict.transform.mousestarty = e.offsetY;
+  layerdict.transform.mousedownx = e.offsetX;
+  layerdict.transform.mousedowny = e.offsetY;
+  layerdict.transform.mousedown = true;
+}
+
+function handleMouseClick(e, layerdict) {
+  var x = e.offsetX;
+  var y = e.offsetY;
+  var t = layerdict.transform;
+  if (layerdict.layer == "B") {
+    x = (2 * x / t.zoom - t.panx + t.x) / -t.s;
+  } else {
+    x = (2 * x / t.zoom - t.panx - t.x) / t.s;
+  }
+  y = (2 * y / t.zoom - t.y - t.pany) / t.s;
+  var reflist = bboxScan(layerdict.layer, x, y);
+  if (reflist.length > 0) {
+    modulesClicked(reflist);
+  }
+}
+
+function handleMouseUp(e, layerdict) {
+  e.preventDefault();
+  e.stopPropagation();
+  if (e.which == 1 &&
+    layerdict.transform.mousedown &&
+    layerdict.transform.mousedownx == e.offsetX &&
+    layerdict.transform.mousedowny == e.offsetY) {
+    // This is just a click
+    handleMouseClick(e, layerdict);
+  }
+  layerdict.transform.mousedown = false;
+  if (e.which == 3) {
+    // Reset pan and zoom on right click.
+    layerdict.transform.panx = 0;
+    layerdict.transform.pany = 0;
+    layerdict.transform.zoom = 1;
+  }
+  redrawCanvas(layerdict);
+}
+
+function handleMouseMove(e, layerdict) {
+  if (!layerdict.transform.mousedown) {
+    return;
+  }
+  e.preventDefault();
+  e.stopPropagation();
+  dx = e.offsetX - layerdict.transform.mousestartx;
+  dy = e.offsetY - layerdict.transform.mousestarty;
+  layerdict.transform.panx += 2 * dx / layerdict.transform.zoom;
+  layerdict.transform.pany += 2 * dy / layerdict.transform.zoom;
+  layerdict.transform.mousestartx = e.offsetX;
+  layerdict.transform.mousestarty = e.offsetY;
+  if (redrawOnDrag) {
+    redrawCanvas(layerdict);
+  }
+}
+
+function handleMouseWheel(e, layerdict) {
+  e.preventDefault();
+  e.stopPropagation();
+  var t = layerdict.transform;
+  var wheeldelta = e.deltaY;
+  if (e.deltaMode == 1) {
+    // FF only, scroll by lines
+    wheeldelta *= 30;
+  } else if (e.deltaMode == 2) {
+    wheeldelta *= 300;
+  }
+  var m = Math.pow(1.1, -wheeldelta / 40);
+  // Limit amount of zoom per tick.
+  if (m > 2) {
+    m = 2;
+  } else if (m < 0.5) {
+    m = 0.5;
+  }
+  t.zoom *= m;
+  var zoomd = (1 - m) / t.zoom;
+  t.panx += 2 * e.offsetX * zoomd;
+  t.pany += 2 * e.offsetY * zoomd;
+  redrawCanvas(layerdict);
+  console.log(layerdict.transform.zoom);
+}
+
+function addMouseHandlers(div, layerdict) {
+  div.onmousedown = function(e) {
+    handleMouseDown(e, layerdict);
+  };
+  div.onmousemove = function(e) {
+    handleMouseMove(e, layerdict);
+  };
+  div.onmouseup = function(e) {
+    handleMouseUp(e, layerdict);
+  };
+  div.onmouseout = function(e) {
+    handleMouseUp(e, layerdict);
+  }
+  div.onwheel = function(e) {
+    handleMouseWheel(e, layerdict);
+  }
+  for (element of [div, layerdict.bg, layerdict.silk, layerdict.highlight]) {
+    element.addEventListener("contextmenu", function(e) {
+      e.preventDefault();
+    }, false);
+  }
+}
+
+function setRedrawOnDrag(value) {
+  redrawOnDrag = value;
+  writeStorage("redrawOnDrag", value);
+}
+
+function initRender() {
+  allcanvas = {
+    front: {
+      transform: {
+        x: 0,
+        y: 0,
+        s: 1,
+        panx: 0,
+        pany: 0,
+        zoom: 1,
+        mousestartx: 0,
+        mousestarty: 0,
+        mousedown: false,
+      },
+      bg: document.getElementById("F_bg"),
+      silk: document.getElementById("F_slk"),
+      highlight: document.getElementById("F_hl"),
+      layer: "F",
+    },
+    back: {
+      transform: {
+        x: 0,
+        y: 0,
+        s: 1,
+        panx: 0,
+        pany: 0,
+        zoom: 1,
+        mousestartx: 0,
+        mousestarty: 0,
+        mousedown: false,
+      },
+      bg: document.getElementById("B_bg"),
+      silk: document.getElementById("B_slk"),
+      highlight: document.getElementById("B_hl"),
+      layer: "B",
+    }
+  };
+  addMouseHandlers(document.getElementById("frontcanvas"), allcanvas.front);
+  addMouseHandlers(document.getElementById("backcanvas"), allcanvas.back);
+}
+
+///////////////////////////////////////////////
+
+///////////////////////////////////////////////
+/* DOM manipulation and misc code */
+
+var storagePrefix = 'KiCad_HTML_BOM__' + pcbdata.metadata.title + '__' +
+  pcbdata.metadata.revision + '__';
+var bomsplit;
+var canvassplit;
+var canvaslayout = "default";
+var bomlayout = "default";
+var currentHighlightedRowId;
+var highlightHandlers = [];
+var highlightedRefs = [];
+var checkboxes = [];
+var bomCheckboxes = "";
+var storage;
+var lastClickedRef;
+
+function initStorage(key) {
+  try {
+    window.localStorage.getItem("blank");
+    storage = window.localStorage;
+  } catch (e) {
+    // localStorage not available
+  }
+  if (!storage) {
+    try {
+      window.sessionStorage.getItem("blank");
+      storage = window.sessionStorage;
+    } catch (e) {
+      // sessionStorage also not available
+    }
+  }
+}
+
+function readStorage(key) {
+  if (storage) {
+    return storage.getItem(storagePrefix + '#' + key);
+  } else {
+    return null;
+  }
+}
+
+function writeStorage(key, value) {
+  if (storage) {
+    storage.setItem(storagePrefix + '#' + key, value);
+  }
+}
+
+function dbg(html) {
+  dbgdiv.innerHTML = html;
+}
+
+function setDarkMode(value) {
+  if (value) {
+    topmostdiv.classList.add("dark");
+  } else {
+    topmostdiv.classList.remove("dark");
+  }
+  writeStorage("darkmode", value);
+  redrawCanvas(allcanvas.front);
+  redrawCanvas(allcanvas.back);
+}
+
+function getStoredCheckboxRefs(checkbox) {
+  existingRefs = readStorage("checkbox_" + checkbox);
+  if (!existingRefs) {
+    refsSet = new Set();
+  } else {
+    refsSet = new Set(existingRefs.split(","));
+  }
+  return refsSet;
+}
+
+function setBomCheckboxState(checkbox, element, references) {
+  var storedRefsSet = getStoredCheckboxRefs(checkbox);
+  var currentRefsSet = new Set(references);
+  // Get difference of current - stored
+  var difference = new Set(currentRefsSet);
+  for (ref of storedRefsSet) {
+    difference.delete(ref);
+  }
+  if (difference.size == 0) {
+    // All the current refs are stored
+    element.checked = true;
+  } else if (difference.size == currentRefsSet.size) {
+    // None of the current refs are stored
+    element.checked = false;
+  } else {
+    // Some of the refs are stored
+    element.checked = false;
+    element.indeterminate = true;
+  }
+}
+
+function createCheckboxChangeHandler(checkbox, references) {
+  return function() {
+    refsSet = getStoredCheckboxRefs(checkbox);
+    if (this.checked) {
+      // checkbox ticked
+      for (ref of references) {
+        refsSet.add(ref);
+      }
+    } else {
+      // checkbox unticked
+      for (ref of references) {
+        refsSet.delete(ref);
+      }
+    }
+    writeStorage("checkbox_" + checkbox, [...refsSet].join(","));
+  }
+}
+
+function createRowHighlightHandler(rowid, refs) {
+  return function() {
+    if (currentHighlightedRowId) {
+      if (currentHighlightedRowId == rowid) {
+        return;
+      }
+      document.getElementById(currentHighlightedRowId).classList.remove("highlighted");
+    }
+    document.getElementById(rowid).classList.add("highlighted");
+    currentHighlightedRowId = rowid;
+    highlightedRefs = refs;
+    drawHighlights();
+  }
+}
+
+function entryMatches(entry) {
+  // check refs
+  for (ref of entry[3]) {
+    if (ref.toLowerCase().indexOf(filter) >= 0) {
+      return true;
+    }
+  }
+  // check value
+  if (entry[1].toLowerCase().indexOf(filter) >= 0) {
+    return true;
+  }
+  // check footprint
+  if (entry[2].toLowerCase().indexOf(filter) >= 0) {
+    return true;
+  }
+  return false;
+}
+
+function findRefInEntry(entry) {
+  for (ref of entry[3]) {
+    if (ref.toLowerCase() == reflookup) {
+      return [ref];
+    }
+  }
+  return false;
+}
+
+function highlightFilter(s) {
+  if (!filter) {
+    return s;
+  }
+  var parts = s.toLowerCase().split(filter);
+  if (parts.length == 1) {
+    return s;
+  }
+  var r = "";
+  var pos = 0;
+  for (var i in parts) {
+    if (i > 0) {
+      r += '<mark class="highlight">' +
+        s.substring(pos, pos + filter.length) +
+        '</mark>';
+      pos += filter.length;
+    }
+    r += s.substring(pos, pos + parts[i].length);
+    pos += parts[i].length;
+  }
+  return r;
+}
+
+function populateBomHeader() {
+  var tr = document.createElement("TR");
+  var td = document.createElement("TH");
+  td.classList.add("numCol");
+  tr.appendChild(td);
+  checkboxes = bomCheckboxes.split(",");
+  for (checkbox of checkboxes) {
+    if (checkbox) {
+      td = document.createElement("TH");
+      td.classList.add("bom-checkbox");
+      td.innerHTML = checkbox;
+      tr.appendChild(td);
+    }
+  }
+  td = document.createElement("TH");
+  td.classList.add("References");
+  td.innerHTML = "References";
+  tr.appendChild(td);
+  td = document.createElement("TH");
+  td.classList.add("Value");
+  td.innerHTML = "Value";
+  tr.appendChild(td);
+  td = document.createElement("TH");
+  td.classList.add("Footprint");
+  td.innerHTML = "Footprint";
+  tr.appendChild(td);
+  td = document.createElement("TH");
+  td.classList.add("Quantity");
+  td.innerHTML = "Quantity";
+  tr.appendChild(td);
+  bomhead.appendChild(tr);
+}
+
+function populateBomBody() {
+  highlightHandlers = [];
+  currentHighlightedRowId = null;
+  var first = true;
+  switch (canvaslayout) {
+    case 'F':
+      bomtable = pcbdata.bom.F;
+      break;
+    case 'FB':
+      bomtable = pcbdata.bom.both;
+      break;
+    case 'B':
+      bomtable = pcbdata.bom.B;
+      break;
+  }
+  for (var i in bomtable) {
+    var bomentry = bomtable[i];
+    if (filter && !entryMatches(bomentry)) {
+      continue;
+    }
+    references = bomentry[3];
+    if (reflookup) {
+      references = findRefInEntry(bomentry);
+      if (!references) {
+        continue;
+      }
+    }
+    var tr = document.createElement("TR");
+    var td = document.createElement("TD");
+    var rownum = +i + 1;
+    tr.id = "bomrow" + rownum;
+    td.textContent = rownum;
+    tr.appendChild(td);
+    // Checkboxes
+    for (checkbox of checkboxes) {
+      if (checkbox) {
+        td = document.createElement("TD");
+        input = document.createElement("input");
+        input.type = "checkbox";
+        input.onchange = createCheckboxChangeHandler(checkbox, references);
+        setBomCheckboxState(checkbox, input, references);
+        td.appendChild(input);
+        tr.appendChild(td);
+      }
+    }
+    // References
+    td = document.createElement("TD");
+    td.innerHTML = highlightFilter(references.join(", "));
+    tr.appendChild(td);
+    // Value
+    td = document.createElement("TD");
+    td.innerHTML = highlightFilter(bomentry[1]);
+    tr.appendChild(td);
+    // Footprint
+    td = document.createElement("TD");
+    td.innerHTML = highlightFilter(bomentry[2]);
+    tr.appendChild(td);
+    // Quantity
+    td = document.createElement("TD");
+    td.textContent = bomentry[3].length;
+    tr.appendChild(td);
+    bom.appendChild(tr);
+    var handler = createRowHighlightHandler(tr.id, references);
+    tr.onmousemove = handler;
+    highlightHandlers.push({
+      id: tr.id,
+      handler: handler,
+      refs: references
+    });
+    if ((filter || reflookup) && first) {
+      highlightedRefs = references;
+      drawHighlights();
+      first = false;
+    }
+  }
+}
+
+function smoothScrollToRow(rowid) {
+  document.getElementById(rowid).scrollIntoView({
+    behavior: "smooth",
+    block: "center",
+    inline: "nearest"
+  });}
+
+function highlightPreviousRow() {
+  if (!currentHighlightedRowId) {
+    highlightHandlers[highlightHandlers.length - 1].handler();
+  } else {
+    if (highlightHandlers.length > 1 &&
+      highlightHandlers[0].id == currentHighlightedRowId) {
+      highlightHandlers[highlightHandlers.length - 1].handler();
+    } else {
+      for (var i = 0; i < highlightHandlers.length - 1; i++) {
+        if (highlightHandlers[i + 1].id == currentHighlightedRowId) {
+          highlightHandlers[i].handler();
+          break;
+        }
+      }
+    }
+  }
+  smoothScrollToRow(currentHighlightedRowId);
+}
+
+function highlightNextRow() {
+  if (!currentHighlightedRowId) {
+    highlightHandlers[0].handler();
+  } else {
+    if (highlightHandlers.length > 1 &&
+      highlightHandlers[highlightHandlers.length - 1].id == currentHighlightedRowId) {
+      highlightHandlers[0].handler();
+    } else {
+      for (var i = 1; i < highlightHandlers.length; i++) {
+        if (highlightHandlers[i - 1].id == currentHighlightedRowId) {
+          highlightHandlers[i].handler();
+          break;
+        }
+      }
+    }
+  }
+  smoothScrollToRow(currentHighlightedRowId);
+}
+
+function populateBomTable() {
+  while (bom.firstChild) {
+    bom.removeChild(bom.firstChild);
+  }
+  while (bomhead.firstChild) {
+    bomhead.removeChild(bomhead.firstChild);
+  }
+  populateBomHeader();
+  populateBomBody();
+}
+
+function modulesClicked(references) {
+  var lastClickedIndex = references.indexOf(lastClickedRef);
+  var ref = references[(lastClickedIndex + 1) % references.length];
+  for (var handler of highlightHandlers) {
+    if (handler.refs.indexOf(ref) >= 0) {
+      lastClickedRef = ref;
+      handler.handler();
+      smoothScrollToRow(currentHighlightedRowId);
+      break;
+    }
+  }
+}
+
+function updateFilter(input) {
+  filter = input.toLowerCase();
+  populateBomTable();
+}
+
+function updateRefLookup(input) {
+  reflookup = input.toLowerCase();
+  populateBomTable();
+}
+
+function silkscreenVisible(visible) {
+  if (visible) {
+    allcanvas.front.silk.style.display = "";
+    allcanvas.back.silk.style.display = "";
+    writeStorage("silkscreenVisible", true);
+  } else {
+    allcanvas.front.silk.style.display = "none";
+    allcanvas.back.silk.style.display = "none";
+    writeStorage("silkscreenVisible", false);
+  }
+}
+
+function changeCanvasLayout(layout) {
+  document.getElementById("fl-btn").classList.remove("depressed");
+  document.getElementById("fb-btn").classList.remove("depressed");
+  document.getElementById("bl-btn").classList.remove("depressed");
+  switch (layout) {
+    case 'F':
+      document.getElementById("fl-btn").classList.add("depressed");
+      if (bomlayout != "BOM") {
+        canvassplit.collapse(1);
+      }
+      break;
+    case 'B':
+      document.getElementById("bl-btn").classList.add("depressed");
+      if (bomlayout != "BOM") {
+        canvassplit.collapse(0);
+      }
+      break;
+    default:
+      document.getElementById("fb-btn").classList.add("depressed");
+      if (bomlayout != "BOM") {
+        canvassplit.setSizes([50, 50]);
+      }
+  }
+  canvaslayout = layout;
+  writeStorage("canvaslayout", layout);
+  resizeAll();
+  populateBomTable();
+}
+
+function populateMetadata() {
+  document.getElementById("title").innerHTML = pcbdata.metadata.title;
+  document.getElementById("revision").innerHTML = "Rev: " + pcbdata.metadata.revision;
+  document.getElementById("company").innerHTML = pcbdata.metadata.company;
+  document.getElementById("filedate").innerHTML = pcbdata.metadata.date;
+  if (pcbdata.metadata.title != "") {
+    document.title = pcbdata.metadata.title + " BOM";
+  }
+}
+
+function changeBomLayout(layout) {
+  document.getElementById("bom-btn").classList.remove("depressed");
+  document.getElementById("lr-btn").classList.remove("depressed");
+  document.getElementById("tb-btn").classList.remove("depressed");
+  switch (layout) {
+    case 'BOM':
+      document.getElementById("bom-btn").classList.add("depressed");
+      if (bomsplit) {
+        bomsplit.destroy();
+        bomsplit = null;
+        canvassplit.destroy();
+        canvassplit = null;
+      }
+      document.getElementById("frontcanvas").style.display = "none";
+      document.getElementById("backcanvas").style.display = "none";
+      document.getElementById("bot").style.height = "";
+      break;
+    case 'TB':
+      document.getElementById("tb-btn").classList.add("depressed");
+      document.getElementById("frontcanvas").style.display = "";
+      document.getElementById("backcanvas").style.display = "";
+      document.getElementById("bot").style.height = "calc(100% - 80px)";
+      document.getElementById("bomdiv").classList.remove("split-horizontal");
+      document.getElementById("canvasdiv").classList.remove("split-horizontal");
+      document.getElementById("frontcanvas").classList.add("split-horizontal");
+      document.getElementById("backcanvas").classList.add("split-horizontal");
+      if (bomsplit) {
+        bomsplit.destroy();
+        bomsplit = null;
+        canvassplit.destroy();
+        canvassplit = null;
+      }
+      bomsplit = Split(['#bomdiv', '#canvasdiv'], {
+        sizes: [50, 50],
+        onDragEnd: resizeAll,
+        direction: "vertical",
+        gutterSize: 5
+      });
+      canvassplit = Split(['#frontcanvas', '#backcanvas'], {
+        sizes: [50, 50],
+        gutterSize: 5,
+        onDragEnd: resizeAll
+      });
+      break;
+    case 'LR':
+      document.getElementById("lr-btn").classList.add("depressed");
+      document.getElementById("frontcanvas").style.display = "";
+      document.getElementById("backcanvas").style.display = "";
+      document.getElementById("bot").style.height = "calc(100% - 80px)";
+      document.getElementById("bomdiv").classList.add("split-horizontal");
+      document.getElementById("canvasdiv").classList.add("split-horizontal");
+      document.getElementById("frontcanvas").classList.remove("split-horizontal");
+      document.getElementById("backcanvas").classList.remove("split-horizontal");
+      if (bomsplit) {
+        bomsplit.destroy();
+        bomsplit = null;
+        canvassplit.destroy();
+        canvassplit = null;
+      }
+      bomsplit = Split(['#bomdiv', '#canvasdiv'], {
+        sizes: [50, 50],
+        onDragEnd: resizeAll,
+        gutterSize: 5
+      });
+      canvassplit = Split(['#frontcanvas', '#backcanvas'], {
+        sizes: [50, 50],
+        gutterSize: 5,
+        direction: "vertical",
+        onDragEnd: resizeAll
+      });
+  }
+  bomlayout = layout;
+  writeStorage("bomlayout", layout);
+  changeCanvasLayout(canvaslayout);
+}
+
+function focusInputField(input) {
+  input.scrollIntoView(false);
+  input.focus();
+  input.select();
+}
+
+function focusFilterField() {
+  focusInputField(document.getElementById("filter"));
+}
+
+function focusRefLookupField() {
+  focusInputField(document.getElementById("reflookup"));
+}
+
+function toggleBomCheckbox(bomrowid, checkboxnum) {
+  if (!bomrowid || checkboxnum > checkboxes.length) {
+    return;
+  }
+  var bomrow = document.getElementById(bomrowid);
+  var checkbox = bomrow.childNodes[checkboxnum].childNodes[0];
+  checkbox.checked = !checkbox.checked;
+  checkbox.indeterminate = false;
+  checkbox.onchange();
+}
+
+function removeGutterNode(node) {
+  for (var i = 0; i < node.childNodes.length; i++) {
+    if (node.childNodes[i].classList &&
+      node.childNodes[i].classList.contains("gutter")) {
+      node.removeChild(node.childNodes[i]);
+      break;
+    }
+  }
+}
+
+function cleanGutters() {
+  removeGutterNode(document.getElementById("bot"));
+  removeGutterNode(document.getElementById("canvasdiv"));
+}
+
+function setBomCheckboxes(value) {
+  bomCheckboxes = value;
+  writeStorage("bomCheckboxes", value);
+  populateBomTable();
+}
+
+document.onkeydown = function(e) {
+  switch (e.key) {
+    case "ArrowUp":
+      highlightPreviousRow();
+      e.preventDefault();
+      break;
+    case "ArrowDown":
+      highlightNextRow();
+      e.preventDefault();
+      break;
+    default:
+      break;
+  }
+  if (e.altKey) {
+    switch (e.key) {
+      case "f":
+        focusFilterField();
+        e.preventDefault();
+        break;
+      case "r":
+        focusRefLookupField();
+        e.preventDefault();
+        break;
+      case "z":
+        changeBomLayout("BOM");
+        e.preventDefault();
+        break;
+      case "x":
+        changeBomLayout("LR");
+        e.preventDefault();
+        break;
+      case "c":
+        changeBomLayout("TB");
+        e.preventDefault();
+        break;
+      case "v":
+        changeCanvasLayout("F");
+        e.preventDefault();
+        break;
+      case "b":
+        changeCanvasLayout("FB");
+        e.preventDefault();
+        break;
+      case "n":
+        changeCanvasLayout("B");
+        e.preventDefault();
+        break;
+      default:
+        break;
+    }
+    if (e.key >= '1' && e.key <= '9') {
+      toggleBomCheckbox(currentHighlightedRowId, parseInt(e.key));
+    }
+  }
+}
+
+window.onload = function(e) {
+  initStorage();
+  cleanGutters();
+  initRender();
+  dbgdiv = document.getElementById("dbg");
+  bom = document.getElementById("bombody");
+  bomhead = document.getElementById("bomhead");
+  bomlayout = readStorage("bomlayout");
+  if (!bomlayout) {
+    bomlayout = "LR";
+  }
+  canvaslayout = readStorage("canvaslayout");
+  if (!canvaslayout) {
+    canvaslayout = "FB";
+  }
+  filter = "";
+  reflookup = "";
+  populateMetadata();
+  bomCheckboxes = readStorage("bomCheckboxes");
+  if (bomCheckboxes === null) {
+    bomCheckboxes = "Sourced,Placed";
+  }
+  document.getElementById("bomCheckboxes").value = bomCheckboxes;
+  if (readStorage("silkscreenVisible") === "false") {
+    document.getElementById("silkscreenCheckbox").checked = false;
+    silkscreenVisible(false);
+  }
+  if (readStorage("redrawOnDrag") === "false") {
+    document.getElementById("dragCheckbox").checked = false;
+    setRedrawOnDrag(false);
+  }
+  if (readStorage("darkmode") === "true") {
+    document.getElementById("darkmodeCheckbox").checked = true;
+    setDarkMode(true);
+  }
+  // Triggers render
+  changeBomLayout(bomlayout);
+}
+
+window.onresize = resizeAll;
+window.matchMedia("print").addListener(resizeAll);
+
+///////////////////////////////////////////////
+
+  </script>
+</head>
+
+<body>
+<div id="topmostdiv" style="width: 100%; height: 100%">
+  <div id="top">
+    <div style="float: right;">
+      <div class="hideonprint menu" style="float: right; margin: 10px; top: 8px;">
+        <button class="menubtn"></button>
+        <div class="menu-content">
+          <label class="menu-label menu-label-top">
+            <input id="darkmodeCheckbox" type="checkbox" onchange="setDarkMode(this.checked)">
+            Dark mode
+          </label>
+          <label class="menu-label">
+            <input id="silkscreenCheckbox" type="checkbox" checked onchange="silkscreenVisible(this.checked)">
+            Show silkscreen
+          </label>
+          <label class="menu-label">
+            <input id="dragCheckbox" type="checkbox" checked onchange="setRedrawOnDrag(this.checked)">
+            Continuous redraw on drag
+          </label>
+          <label class="menu-label">
+            <div style="margin-left: 5px">Bom checkboxes</div>
+            <input id="bomCheckboxes" class="menu-textbox" type=text
+                   oninput="setBomCheckboxes(this.value)">
+          </label>
+        </div>
+      </div>
+      <div class="button-container hideonprint"
+           style="float: right; margin: 10px; position: relative; top: 8px">
+        <button id="fl-btn" class="left-most-button" onclick="changeCanvasLayout('F')"
+                title="Front only">F
+        </button>
+        <button id="fb-btn" class="middle-button" onclick="changeCanvasLayout('FB')"
+                title="Front and Back">FB
+        </button>
+        <button id="bl-btn" class="right-most-button" onclick="changeCanvasLayout('B')"
+                title="Back only">B
+        </button>
+      </div>
+      <div class="button-container hideonprint"
+           style="float: right; margin: 10px; position: relative; top: 8px">
+        <button id="bom-btn" class="left-most-button" onclick="changeBomLayout('BOM')"
+                title="BOM only"></button>
+        <button id="lr-btn" class="middle-button" onclick="changeBomLayout('LR')"
+                title="BOM left, drawings right"></button>
+        <button id="tb-btn" class="right-most-button" onclick="changeBomLayout('TB')"
+                title="BOM top, drawings bot"></button>
+      </div>
+    </div>
+    <div id="fileinfodiv" style="overflow: auto;">
+      <table class="fileinfo">
+        <tbody>
+          <tr>
+            <td id="title" class="title" style="width: 70%">
+              Title
+            </td>
+            <td id="revision" class="title" style="width: 30%">
+              Revision
+            </td>
+          </tr>
+          <tr>
+            <td id="company">
+              Kicad version
+            </td>
+            <td id="filedate">
+              Date
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div id="bot" class="split" style="height: calc(100% - 80px)">
+    <div id="bomdiv" class="split split-horizontal">
+      <div style="width: 100%">
+        <input id="reflookup" class="searchbox reflookup hideonprint" type="text" placeholder="Ref lookup"
+               oninput="updateRefLookup(this.value)">
+        <input id="filter" class="searchbox filter hideonprint" type="text" placeholder="Filter"
+               oninput="updateFilter(this.value)">
+      </div>
+      <div id="dbg"></div>
+      <table class="bom">
+        <thead id="bomhead">
+        </thead>
+        <tbody id="bombody">
+        </tbody>
+      </table>
+    </div>
+    <div id="canvasdiv" class="split split-horizontal">
+      <div id="frontcanvas" class="split" style="overflow: hidden">
+        <div style="position: relative; width: 100%; height: 100%;">
+          <canvas id="F_bg" style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
+          <canvas id="F_slk" style="position: absolute; left: 0; top: 0; z-index: 1;"></canvas>
+          <canvas id="F_hl" style="position: absolute; left: 0; top: 0; z-index: 2;"></canvas>
+        </div>
+      </div>
+      <div id="backcanvas" class="split" style="overflow: hidden">
+        <div style="position: relative; width: 100%; height: 100%;">
+          <canvas id="B_bg" style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
+          <canvas id="B_slk" style="position: absolute; left: 0; top: 0; z-index: 1;"></canvas>
+          <canvas id="B_hl" style="position: absolute; left: 0; top: 0; z-index: 2;"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+
+</html>
