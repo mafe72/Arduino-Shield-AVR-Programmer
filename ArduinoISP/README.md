@@ -50,3 +50,16 @@ Upload a Sketch:
 3. Click the upload icon, or "File" -> "Upload".
 4. You should see the yellow LED flash and get an "Upload Complete" message.
 5. If all is well, the target chip should start blinking the yellow LED (attached to D3).
+
+Troubleshooting:
+----------------
+
+If you experience any problems double check the following:
+
+1. "Tools" -> "Serial Port" -> Correct port selected. 
+2. ArduinoISP sketch uploaded and green heartbeat beating.
+	* Sometimes the sketch will hang and need a reset. 
+3. "Tools" -> "Programmer" -> "Arduino as ISP".
+4. "Tools" -> "Boards" -> target chip selected.
+5. Jumper cable set to correct target chip type.
+6. Target chip in the correct position with pin 1 to the lower left. 
