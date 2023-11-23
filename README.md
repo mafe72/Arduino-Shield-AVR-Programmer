@@ -1,5 +1,7 @@
 # Arduino Shield AVR Programmer
 
+![GitHub issues](https://img.shields.io/github/issues-raw/mafe72/Arduino-Shield-AVR-Programmer?logo=Github&style=for-the-badge)
+
 The Arduino software comes with an ArduinoISP sketch which allows an Arduino, correctly connected, to flash another AVR chip. With the use of other libraries like Attiny-core, this means you can use your Arduino and it’s IDE to program Attiny chips! This shield takes all the hassle out of connecting the wires, and with the simple use of a jumper cable, lets you program 8, 14, 20, and 28-pin chips with one easy-to-use zero insertion force (ZIF) socket!
 
 - Load a bootloader on an Atmega328 as a replacement or for a breadboard project.
